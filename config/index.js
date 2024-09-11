@@ -1,7 +1,7 @@
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path')
 
 module.exports = {
@@ -73,6 +73,17 @@ module.exports = {
     // View the bundle analyzer report after build finishes:
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
-    bundleAnalyzerReport: process.env.npm_config_report
+    bundleAnalyzerReport: process.env.npm_config_report,
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.resolve(__dirname, '../static'), // 源文件夹路径
+            to: path.resolve(__dirname, '../dist/static'), // 目标文件夹路径
+            noErrorOnMissing: true, // 如果源文件夹不存在，不报错
+          }
+        ],
+      }),
+    ],
   }
 }
