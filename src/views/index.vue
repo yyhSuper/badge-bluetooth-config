@@ -122,7 +122,7 @@
           </div>
         </div>
         <el-card class="box-card">
-          <el-form label-width="320px">
+          <el-form label-width="220px">
             <el-form-item label="Maximum duration (seconds)：">
               <el-input placeholder="" type="number" :disabled="!isConnect"></el-input>
             </el-form-item>
@@ -134,7 +134,7 @@
                 inactive-color="#ff4949">
               </el-switch>
             </el-form-item>
-            <el-form-item label="Shut down and automatically leave work：">
+            <el-form-item label="automatically leave work：">
               <el-switch
                 v-model="recordingForm.isCloseToWork"
                 :disabled="!isConnect"
