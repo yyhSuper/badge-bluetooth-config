@@ -6,7 +6,7 @@ const path = require('path')
 console.log('Static folder path:', path.resolve(__dirname, '../static'));
 
 module.exports = {
-
+  publicPath: './',
   dev: {
 
     // Paths
@@ -24,7 +24,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8989, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 9999, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
