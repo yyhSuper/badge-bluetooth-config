@@ -772,7 +772,7 @@ export default {
       var text = new TextDecoder().decode(value);
       console.log('返回的通知指令 -->', text);
       try {
-        const response = JSON.parse(text);
+        const response = text
         console.log('解析后的对象:', response);
         console.log('text 是有效的 JSON 格式');
         if (response.id === 100) {
