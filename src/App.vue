@@ -1,80 +1,32 @@
 <template>
   <div id="app">
+    <nav>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </nav>
     <router-view/>
   </div>
 </template>
 
-<script>
-
-export default {
-  name: "App",
-  data() {
-    return {
-
-
-    }
-  },
-  components: {
-
-  },
-  computed: {
-
-
-  }, methods: {
-
-  }
-};
-</script>
-
 <style>
-html,
-body {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  background: #FAFBFC;
-
-}
-
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
   color: #2c3e50;
-
-  width: 100%;
-  height: 100%;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+nav {
+  padding: 30px;
 }
 
-::-webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.1);
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #8F9BB3;
-  border-radius: 4px;
+nav a.router-link-exact-active {
+  color: #42b983;
 }
-
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-
-.custom-drawer-header .drawer-title {
-  font-size: 18px;
-  color: #333;
-}
-
-* {
-  box-sizing: border-box
-}
-
-
 </style>
