@@ -9,7 +9,7 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/ams/',
+    assetsPublicPath: './',
     proxyTable: {
       '/ams-service': {
         target: 'https://be-loved.cn', // 你请求的第三方接口
