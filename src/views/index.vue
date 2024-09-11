@@ -421,8 +421,8 @@ export default {
     /* // 获取GATT服务*/
     async connectDeviceAndCacheCharacteristics() {
       console.log('获取GATT服务')
-      this.deviceOption.characteristicWriteChannel = await this.service.getCharacteristic(deviceOption.characteristicWriteChannelId);
-      this.deviceOption.characteristicReadChannel = await this.service.getCharacteristic(deviceOption.characteristicReadChannelId);
+      this.deviceOption.characteristicWriteChannel = await this.service.getCharacteristic(this.deviceOption.characteristicWriteChannelId);
+      this.deviceOption.characteristicReadChannel = await this.service.getCharacteristic(this.deviceOption.characteristicReadChannelId);
     },
 
     // 写指令
