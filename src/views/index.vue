@@ -771,52 +771,59 @@ export default {
       var value = event.target.value;
       var text = new TextDecoder().decode(value);
       console.log('返回的通知指令 -->', text);
-      let response = JSON.parse(text);
-      if (response.id === 100) {
-       //重启设备
-      }
-      if (response.id === 201) {
-        // 读取WiFi热点列表
-        console.log('读取WiFi热点列表',response)
+      try {
+        const response = JSON.parse(text);
+        console.log('解析后的对象:', response);
+        if (response.id === 100) {
+          //重启设备
+        }
+        if (response.id === 201) {
+          // 读取WiFi热点列表
+          console.log('读取WiFi热点列表',response)
 
-      }
-      if (response.id === 202) {
-        // 连接指定WiFi热点
-        console.log('连接指定WiFi热点',response)
+        }
+        if (response.id === 202) {
+          // 连接指定WiFi热点
+          console.log('连接指定WiFi热点',response)
 
+        }
+        if (response.id === 203) {
+          // 忘记指定WiFi热点
+          console.log('忘记指定WiFi热点',response)
+        }
+        if (response.id === 204) {
+          // 读SasS平台配置
+          console.log('读SasS平台配置',response)
+        }
+        if (response.id === 205) {
+          // 写入SasS平台修改配置
+          console.log('写入SasS平台修改配置',response)
+        }
+        if (response.id === 206) {
+          // 读录音配置
+          console.log('读录音配置',response)
+        }
+        if (response.id === 207) {
+          // 写入录音配置
+          console.log('写入录音配置',response)
+        }
+        if (response.id === 208) {
+          // 读U盘配置
+          console.log('读U盘配置',response)
+        }
+        if (response.id === 208) {
+          // 写入U盘修改配置
+          console.log('写入U盘修改配置',response)
+        }
+        event.target.removeEventListener('characteristicvaluechanged', new function () {
+          console.log('移除监听');
+        });
+        console.log(111);
+      } catch (error) {
+        console.error('解析 JSON 失败:', error);
       }
-      if (response.id === 203) {
-        // 忘记指定WiFi热点
-        console.log('忘记指定WiFi热点',response)
-      }
-      if (response.id === 204) {
-        // 读SasS平台配置
-        console.log('读SasS平台配置',response)
-      }
-      if (response.id === 205) {
-        // 写入SasS平台修改配置
-        console.log('写入SasS平台修改配置',response)
-      }
-      if (response.id === 206) {
-        // 读录音配置
-        console.log('读录音配置',response)
-      }
-      if (response.id === 207) {
-        // 写入录音配置
-        console.log('写入录音配置',response)
-      }
-      if (response.id === 208) {
-        // 读U盘配置
-        console.log('读U盘配置',response)
-      }
-      if (response.id === 208) {
-        // 写入U盘修改配置
-        console.log('写入U盘修改配置',response)
-      }
-      event.target.removeEventListener('characteristicvaluechanged', new function () {
-        console.log('移除监听');
-      });
-      console.log(111);
+
+
     },
     // 构建记忆wifi模板
     appendMemorizrdWiFiList(wifiName) {
