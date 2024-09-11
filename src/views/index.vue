@@ -211,10 +211,10 @@ export default {
       isConnected: false,//标记是否已连接设备
       deviceOption: {
         // deviceNamePrefix: {namePrefix: 'EM'},
-        deviceNamePrefix: {namePrefix: 'BSF'},
+        deviceNamePrefix: {namePrefix: 'BSF_'},
         serviceId: '0000fee0-0000-1000-8000-00805f9b34fb',
         characteristicWriteChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',
-        characteristicReadChannelId: '0000fee4-0000-1000-8000-00805f9b34fb',
+        characteristicReadChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',
         characteristicWriteChannel: null,
         characteristicReadChannel: null,
         connect: false
@@ -348,8 +348,8 @@ export default {
       try {
         const config={
           // filters: [] ,/*<- Prefer filters to save energy & show relevant devices.*/
-          filters: [this.deviceOption.deviceNamePrefix],
-          // acceptAllDevices: true,// 不设置 filters 以显示所有设备
+          // filters: [this.deviceOption.deviceNamePrefix],
+          acceptAllDevices: true,// 不设置 filters 以显示所有设备
           optionalServices: [this.deviceOption.serviceId]
         }
         const  device = await navigator.bluetooth.requestDevice(config);
@@ -764,7 +764,7 @@ export default {
       var text = new TextDecoder().decode(value);
       console.log('返回的通知指令 -->', text);
       let response = JSON.parse(text);
-      if (response.c === 100) {
+      if (response.id === 100) {
        //重启设备
       }
       if (response.id === 201) {
