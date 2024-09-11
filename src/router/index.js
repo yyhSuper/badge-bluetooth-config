@@ -14,7 +14,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  base:'/',
+  mode: 'hash', // 设置路由模式为 hash 模式
   routes
 })
 
