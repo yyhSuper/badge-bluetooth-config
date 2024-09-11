@@ -371,7 +371,7 @@ export default {
 
         console.log('已连接到设备:', device);
         // 开始监听设备的通知（如果需要）
-        this.startNotifications();
+        //this.startNotifications();
         this.device.addEventListener('gattserverdisconnected', this.handleDisconnected.bind(this));
 
 
