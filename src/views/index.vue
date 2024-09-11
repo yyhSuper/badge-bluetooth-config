@@ -332,7 +332,7 @@ export default {
               this.getRecord().then(() => {
                 // 读U盘配置
                 this.getUStorage().then(() => {
-                  // 读U盘配置
+
                 })
               })
             })
@@ -470,7 +470,7 @@ export default {
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
-        reject(res)
+        resolve(res)
       })
     },
 
@@ -531,7 +531,7 @@ export default {
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
-        reject(res)
+        resolve(res)
       });
     },
     /*
@@ -561,7 +561,7 @@ export default {
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
-        reject(res)
+        resolve(res)
       });
     },
     /*
@@ -589,7 +589,7 @@ export default {
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
-        reject(res)
+        resolve(res)
       });
     },
     /*
@@ -774,6 +774,7 @@ export default {
       try {
         const response = JSON.parse(text);
         console.log('解析后的对象:', response);
+        console.log('text 是有效的 JSON 格式');
         if (response.id === 100) {
           //重启设备
         }
@@ -821,6 +822,7 @@ export default {
         console.log(111);
       } catch (error) {
         console.error('解析 JSON 失败:', error);
+        console.error('text 不是有效的 JSON 格式');
       }
 
 
