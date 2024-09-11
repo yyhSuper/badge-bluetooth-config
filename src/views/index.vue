@@ -369,7 +369,7 @@ export default {
         this.characteristic = characteristic;
         this.isConnected = true; // 更新连接状态
 
-        console.log('已连接到设备:', device);
+        console.log('已连接到设备:', JSON.stringify(device));
         // 开始监听设备的通知（如果需要）
         this.startNotifications();
         this.device.addEventListener('gattserverdisconnected', this.handleDisconnected.bind(this));
@@ -490,9 +490,9 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        resolve(res)
-        //延迟200毫秒关闭加载
+
         loading.close()
+        resolve(res)
 
       });
     },
