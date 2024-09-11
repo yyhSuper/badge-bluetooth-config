@@ -328,10 +328,10 @@ export default {
           this.fetchMemorizedWifiList().then(() => {
 
           });
-          // 读SasS平台配置
-         await this.getSaaS();
+         /* // 读SasS平台配置
+          await this.getSaaS();
           //读录音配置
-          await  this.getRecord();
+          await  this.getRecord();*/
           //读U盘配置
         }
       } catch (error) {
@@ -490,10 +490,10 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
+        resolve(res)
         //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
-        reject(res)
+
       });
     },
     /*
@@ -769,6 +769,7 @@ export default {
       }
       if (response.id === 201) {
         // 读取WiFi热点列表
+        console.log('读取WiFi热点列表',JSON.stringify(response))
 
       }
       if (response.id === 202) {
