@@ -487,9 +487,10 @@ export default {
           method: "getWiFiList", // 调用的方法名
           params: null // 此命令不需要参数
         };
-        //await this.startNotifications();
+        
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
+        await this.startNotifications();
         resolve(res)
         //延迟200毫秒关闭加载
         loading.close()
