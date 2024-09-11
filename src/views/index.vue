@@ -773,7 +773,8 @@ export default {
       console.log('返回的通知指令 -->', text);
       try {
         const response = text
-        console.log('解析后的对象:', response);
+        console.log('解析后的对象:');
+        console.log(response);
         console.log('text 是有效的 JSON 格式');
         if (response.id === 100) {
           //重启设备
