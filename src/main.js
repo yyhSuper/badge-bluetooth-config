@@ -46,13 +46,13 @@ new Vue({
         Bus: new Vue(),
     },
     async created() {
-        if (localStorage.getItem('userInfo')) {
+       /* if (localStorage.getItem('userInfo')) {
             // console.log('已经存在用户信息，加载菜单数据')
             try {
                 await store.dispatch('fetchMenuData'); // 直接调用 store.dispatch
             } catch (error) {
                 console.error('初始加载菜单数据失败:', error);
             }
-        }
+        }*/
     }
 }).$mount('#app');
