@@ -371,7 +371,7 @@ export default {
 
         console.log('已连接到设备:', JSON.stringify(device));
         // 开始监听设备的通知（如果需要）
-        this.startNotifications();
+        //this.startNotifications();
         this.device.addEventListener('gattserverdisconnected', this.handleDisconnected.bind(this));
 
 
@@ -488,6 +488,7 @@ export default {
           params: null // 此命令不需要参数
         };
         await this.startNotifications();
+
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
 
@@ -637,9 +638,10 @@ export default {
 
 
         };
-        await this.startNotifications();
+        
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
+        await this.startNotifications();
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
