@@ -3,8 +3,10 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path')
+console.log('Static folder path:', path.resolve(__dirname, '../static'));
 
 module.exports = {
+
   dev: {
 
     // Paths
@@ -74,16 +76,7 @@ module.exports = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report,
-    plugins: [
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: path.resolve(__dirname, '../static'), // 源文件夹路径
-            to: path.resolve(__dirname, '../dist/static'), // 目标文件夹路径
-            noErrorOnMissing: true, // 如果源文件夹不存在，不报错
-          }
-        ],
-      }),
-    ],
-  }
+
+  },
+
 }
