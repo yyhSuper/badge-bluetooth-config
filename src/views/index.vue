@@ -637,9 +637,10 @@ export default {
 
 
         };
-        await this.startNotifications();
+        
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
+        await this.startNotifications();
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
         loading.close()
