@@ -831,249 +831,277 @@ export default {
      */
     handleCharacteristicvaluechanged(event) {
       var value = event.target.value;
-      var text = new TextDecoder().decode(value);
-      console.log('返回的通知指令 -->', text);
+      console.log('返回的通知源value -->' );
+      console.log(value);
+      // 创建 TextDecoder 实例并指定 UTF-8 编码
+      var decoder = new TextDecoder('utf-8', { fatal: true });
       try {
-        const response = text
-        console.log('解析后的对象:');
-        console.log(response);
-        console.log('text 是有效的 JSON 格式');
-        //重启设备
-        if (response.id === 100) {
-          console.log('通知返回重启设备response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('reboot error message:',response.error.message)
-            console.error('reboot error message:',response.error.message)
-            return
-          }
-          if (response.result){
-           this.init()
+        var text = decoder.decode(value);
+        console.log('返回的通知指令decode -->', text);
+        console.log('返回的通知指令类型 -->', typeof text);
+        // 检查 text 是否为 JSON
+        if (this.isJson(text)) {
+          try {
+            const response = JSON.parse(text); // 解析 JSON
+            console.log('解析后的对象:', response);
+            console.log(response);
+            //重启设备
+            if (response.id === 100) {
+              console.log('通知返回重启设备response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('reboot error message:',response.error.message)
+                console.error('reboot error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.init()
 
-          }else{
-            this.$message.error('reboot error',response.error.message)
-          }
-        }
-        // 恢复出厂设置
-        if (response.id === 101) {
-          console.log('通知返回恢复出厂设置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('restoreFactory error message:',response.error.message)
-            console.error('restoreFactory error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.init()
-
-          }else{
-            this.$message.error('restoreFactory error',response.error.message)
-          }
-        }
-        // 读取WiFi热点列表
-        if (response.id === 201) {
-
-          console.log('通知返回读取WiFi热点列表response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('getWiFiList error message:',response.error.message)
-            console.error('getWiFiList error message:',response.error.message)
-            return
-          }
-          //{"jsonrpc":"2.0","id":201,"result":{"scanned":[{"ssid":"ELFLECT"},{"ssid":"611"},{"ssid":"gjlx"},{"ssid":"DIRECT-gH-EShare-2321"},{"ssid":"ChinaNet-sbga"},{"ssid":"longsailing"},{"ssid":"cxzx666"},{"ssid":"cxzx666"}],"connected":null,"memorized":[]}}
-          this.wifiList_scanned=response.result.scanned!==null?response.result.scanned:[];//已扫描到的设备列表
-          this.wifiList_connected=response.result.connected!==null?response.result.connected:[];//已连接的设备列表
-          this.wifiList_memorized=response.result.memorized!==null?response.result.memorized:[];//已记忆的设备列表
-          this.wifiList=[]
-          this.active_wifi_obj=null
-          this.active_wifi_type=null
-          this.selectedWifiIndex=-1
-
-          for (let i = 0; i < this.wifiList_connected.length; i++){
-            let obj={
-              ssid:this.wifiList_connected[i].ssid,
-              type:1
+              }else{
+                this.$message.error('reboot error',response.error.message)
+              }
             }
-            this.wifiList.push(obj)
-          }
-          for (let i = 0; i < this.wifiList_memorized.length; i++){
-            let obj={
-              ssid:this.wifiList_memorized[i].ssid,
-              type:2
+            // 恢复出厂设置
+            if (response.id === 101) {
+              console.log('通知返回恢复出厂设置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('restoreFactory error message:',response.error.message)
+                console.error('restoreFactory error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.init()
+
+              }else{
+                this.$message.error('restoreFactory error',response.error.message)
+              }
             }
-            this.wifiList.push(obj)
-          }
-          for (let i = 0; i < this.wifiList_scanned.length; i++){
-            let obj={
-              ssid:this.wifiList_scanned[i].ssid,
-              type:3
+            // 读取WiFi热点列表
+            if (response.id === 201) {
+
+              console.log('通知返回读取WiFi热点列表response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('getWiFiList error message:',response.error.message)
+                console.error('getWiFiList error message:',response.error.message)
+                return
+              }
+              //{"jsonrpc":"2.0","id":201,"result":{"scanned":[{"ssid":"ELFLECT"},{"ssid":"611"},{"ssid":"gjlx"},{"ssid":"DIRECT-gH-EShare-2321"},{"ssid":"ChinaNet-sbga"},{"ssid":"longsailing"},{"ssid":"cxzx666"},{"ssid":"cxzx666"}],"connected":null,"memorized":[]}}
+              this.wifiList_scanned=response.result.scanned!==null?response.result.scanned:[];//已扫描到的设备列表
+              this.wifiList_connected=response.result.connected!==null?response.result.connected:[];//已连接的设备列表
+              this.wifiList_memorized=response.result.memorized!==null?response.result.memorized:[];//已记忆的设备列表
+              this.wifiList=[]
+              this.active_wifi_obj=null
+              this.active_wifi_type=null
+              this.selectedWifiIndex=-1
+
+              for (let i = 0; i < this.wifiList_connected.length; i++){
+                let obj={
+                  ssid:this.wifiList_connected[i].ssid,
+                  type:1
+                }
+                this.wifiList.push(obj)
+              }
+              for (let i = 0; i < this.wifiList_memorized.length; i++){
+                let obj={
+                  ssid:this.wifiList_memorized[i].ssid,
+                  type:2
+                }
+                this.wifiList.push(obj)
+              }
+              for (let i = 0; i < this.wifiList_scanned.length; i++){
+                let obj={
+                  ssid:this.wifiList_scanned[i].ssid,
+                  type:3
+                }
+                this.wifiList.push(obj)
+              }
+              console.log('所有wifi 列表',this.wifiList)
             }
-            this.wifiList.push(obj)
+            // 连接指定WiFi热点
+            if (response.id === 202) {
+
+
+              console.log('通知返回连接指定WiFi热点response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('connectWiFi error message:',response.error.message)
+                console.error('connectWiFi error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.fetchMemorizedWifiList().then(()=>{
+                  this.$message.success('connectWiFi success')
+                })
+
+              }else{
+                this.$message.error('connectWiFi error',response.error.message)
+              }
+
+
+            }
+            // 忘记指定WiFi热点
+            if (response.id === 203) {
+
+              console.log('通知返回忘记指定WiFi热点response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('forgetWiFi error message:',response.error.message)
+                console.error('forgetWiFi error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.fetchMemorizedWifiList().then(()=>{
+                  this.$message.success('forgetWiFi success')
+                })
+
+              }else{
+                this.$message.error('forgetWiFi error',response.error.message)
+              }
+            }
+            // 读SasS平台配置
+            if (response.id === 204) {
+
+              console.log('通知返回读SasS平台配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('getSaaS error message:',response.error.message)
+                console.error('getSaaS error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.SaaSForm=response.result
+                this.SaaSFormIsEditor=false
+
+              }else{
+                this.$message.error('getSaaS error',response.error.message)
+              }
+            }
+            // 写入SasS平台修改配置
+            if (response.id === 205) {
+              console.log('通知返回写入SasS平台修改配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('setSaaS error message:',response.error.message)
+                console.error('setSaaS error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.getSaaS().then(res=>{
+                  this.$message.success('setSaaS success')
+                })
+
+
+              }else{
+                this.$message.error('setSaaS error',response.error.message)
+              }
+            }
+            // 读录音配置
+            if (response.id === 206) {
+              console.log('通知返回读录音配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('getRecord error message:',response.error.message)
+                console.error('getRecord error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.recordingForm=response.result
+                this.recordingFormIsEditor=false
+
+              }else{
+                this.$message.error('getRecord error',response.error.message)
+              }
+            }
+            // 写入录音配置
+            if (response.id === 207) {
+              console.log('通知返回写入录音配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('setRecord error message:',response.error.message)
+                console.error('setRecord error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.getRecord().then(res=>{
+                  this.$message.success('setRecord success')
+                })
+
+
+              }else{
+                this.$message.error('setSaaS error',response.error.message)
+              }
+            }
+            // 读U盘配置
+            if (response.id === 208) {
+              console.log('通知返回读U盘配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('getUStorage error message:',response.error.message)
+                console.error('getUStorage error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.USBForm=response.result
+                this.USBFormIsEditor=false
+
+              }else{
+                this.$message.error('getUStorage error',response.error.message)
+              }
+            }
+            // 写入U盘修改配置
+            if (response.id === 209) {
+              console.log('通知返回写入U盘修改配置response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('setUStorage error message:',response.error.message)
+                console.error('setUStorage error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.getUStorage().then(res=>{
+                  this.$message.success('setUStorage success')
+                })
+
+
+              }else{
+                this.$message.error('setSaaS error',response.error.message)
+              }
+            }
+            // 读设备信息
+            if (response.id === 210) {
+              console.log('通知返回读设备信息response',response)
+              if (response.result ===undefined&&response.error!==null){
+                this.$message.error('getDevice error message:',response.error.message)
+                console.error('getDevice error message:',response.error.message)
+                return
+              }
+              if (response.result){
+                this.deviceInfo=response.result
+
+              }else{
+                this.$message.error('getDevice error',response.error.message)
+              }
+            }
+
+            event.target.removeEventListener('characteristicvaluechanged', new function () {
+              console.log('移除监听');
+            });
+            console.log('通知返回数据处理完成');
+
+
+          } catch (error) {
+            console.error('解析 JSON 失败:', error);
+            console.error('text 不是有效的 JSON 格式');
           }
-          console.log('所有wifi 列表',this.wifiList)
+        } else {
+          console.error('text 不是有效的 JSON 格式');
         }
-        // 连接指定WiFi热点
-        if (response.id === 202) {
+      }
+      catch (error) {
+        console.error('解码失败:', error);
+        console.error('数据不是有效的 UTF-8 编码');
+        return;
+      }
 
 
-          console.log('通知返回连接指定WiFi热点response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('connectWiFi error message:',response.error.message)
-            console.error('connectWiFi error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.fetchMemorizedWifiList().then(()=>{
-              this.$message.success('connectWiFi success')
-            })
-
-          }else{
-            this.$message.error('connectWiFi error',response.error.message)
-          }
-
-
-        }
-        // 忘记指定WiFi热点
-        if (response.id === 203) {
-
-          console.log('通知返回忘记指定WiFi热点response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('forgetWiFi error message:',response.error.message)
-            console.error('forgetWiFi error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.fetchMemorizedWifiList().then(()=>{
-              this.$message.success('forgetWiFi success')
-            })
-
-          }else{
-            this.$message.error('forgetWiFi error',response.error.message)
-          }
-        }
-        // 读SasS平台配置
-        if (response.id === 204) {
-
-          console.log('通知返回读SasS平台配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('getSaaS error message:',response.error.message)
-            console.error('getSaaS error message:',response.error.message)
-            return
-          }
-          if (response.result){
-           this.SaaSForm=response.result
-            this.SaaSFormIsEditor=false
-
-          }else{
-            this.$message.error('getSaaS error',response.error.message)
-          }
-        }
-        // 写入SasS平台修改配置
-        if (response.id === 205) {
-          console.log('通知返回写入SasS平台修改配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('setSaaS error message:',response.error.message)
-            console.error('setSaaS error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.getSaaS().then(res=>{
-              this.$message.success('setSaaS success')
-            })
-
-
-          }else{
-            this.$message.error('setSaaS error',response.error.message)
-          }
-        }
-        // 读录音配置
-        if (response.id === 206) {
-          console.log('通知返回读录音配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('getRecord error message:',response.error.message)
-            console.error('getRecord error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.recordingForm=response.result
-            this.recordingFormIsEditor=false
-
-          }else{
-            this.$message.error('getRecord error',response.error.message)
-          }
-        }
-        // 写入录音配置
-        if (response.id === 207) {
-          console.log('通知返回写入录音配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('setRecord error message:',response.error.message)
-            console.error('setRecord error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.getRecord().then(res=>{
-              this.$message.success('setRecord success')
-            })
-
-
-          }else{
-            this.$message.error('setSaaS error',response.error.message)
-          }
-        }
-        // 读U盘配置
-        if (response.id === 208) {
-          console.log('通知返回读U盘配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('getUStorage error message:',response.error.message)
-            console.error('getUStorage error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.USBForm=response.result
-            this.USBFormIsEditor=false
-
-          }else{
-            this.$message.error('getUStorage error',response.error.message)
-          }
-        }
-        // 写入U盘修改配置
-        if (response.id === 209) {
-          console.log('通知返回写入U盘修改配置response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('setUStorage error message:',response.error.message)
-            console.error('setUStorage error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.getUStorage().then(res=>{
-              this.$message.success('setUStorage success')
-            })
-
-
-          }else{
-            this.$message.error('setSaaS error',response.error.message)
-          }
-        }
-        // 读设备信息
-        if (response.id === 210) {
-          console.log('通知返回读设备信息response',response)
-          if (response.result ===undefined&&response.error!==null){
-            this.$message.error('getDevice error message:',response.error.message)
-            console.error('getDevice error message:',response.error.message)
-            return
-          }
-          if (response.result){
-            this.deviceInfo=response.result
-
-          }else{
-            this.$message.error('getDevice error',response.error.message)
-          }
-        }
-
-        event.target.removeEventListener('characteristicvaluechanged', new function () {
-          console.log('移除监听');
-        });
-        console.log(111);
-      } catch (error) {
-        console.error('解析 JSON 失败:', error);
-        console.error('text 不是有效的 JSON 格式');
+    },
+    isJson(text) {
+      try {
+        JSON.parse(text);
+        return true; // 如果没有抛出错误，则说明是有效的 JSON
+      } catch (e) {
+        return false; // 抛出错误则不是有效的 JSON
       }
     },
     // 检查浏览器是否支持蓝牙
