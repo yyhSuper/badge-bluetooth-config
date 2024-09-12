@@ -713,7 +713,7 @@ export default {
           method: "setSaaS", // 调用的方法名
           params:{
             ipAddress: ipAddress,
-            port: port
+            port: parseInt(port)
           }
         };
         await this.startNotifications();
@@ -757,7 +757,7 @@ export default {
           id: 207, // 命令ID，用于匹配请求和响应
           method: "setRecord", // 调用的方法名
           params:{
-            maxRecordDuration ,
+            maxRecordDuration:parseInt(maxRecordDuration) ,
             autoOnDutyWhenPowerOn,
             autoOffDutyWhenPowerDown
           }
