@@ -916,28 +916,36 @@ export default {
               this.active_wifi_obj=null
               this.active_wifi_type=null
               this.selectedWifiIndex=-1
+              if (this.wifiList_connected.length!==0){
+                for (let i = 0; i < this.wifiList_connected.length; i++){
+                  let obj={
+                    ssid:this.wifiList_connected[i].ssid,
+                    type:1
+                  }
+                  this.wifiList.push(obj)
+                }
+              }
 
-              for (let i = 0; i < this.wifiList_connected.length; i++){
-                let obj={
-                  ssid:this.wifiList_connected[i].ssid,
-                  type:1
-                }
-                this.wifiList.push(obj)
-              }
-              for (let i = 0; i < this.wifiList_memorized.length; i++){
-                let obj={
-                  ssid:this.wifiList_memorized[i].ssid,
-                  type:2
-                }
-                this.wifiList.push(obj)
-              }
-              for (let i = 0; i < this.wifiList_scanned.length; i++){
-                let obj={
-                  ssid:this.wifiList_scanned[i].ssid,
-                  type:3
-                }
-                this.wifiList.push(obj)
-              }
+             if (this.wifiList_scanned.length!==0){
+               for (let i = 0; i < this.wifiList_memorized.length; i++){
+                 let obj={
+                   ssid:this.wifiList_memorized[i].ssid,
+                   type:2
+                 }
+                 this.wifiList.push(obj)
+               }
+             }
+             if (this.wifiList_scanned.length!==0){
+               for (let i = 0; i < this.wifiList_scanned.length; i++){
+                 let obj={
+                   ssid:this.wifiList_scanned[i].ssid,
+                   type:3
+                 }
+                 this.wifiList.push(obj)
+               }
+             }
+
+
               console.log('所有wifi 列表',this.wifiList)
             }
             // 连接指定WiFi热点
