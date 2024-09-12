@@ -912,7 +912,7 @@ export default {
               this.active_wifi_obj=null
               this.active_wifi_type=null
               this.selectedWifiIndex=-1
-              if (this.wifiList_connected.length!==0){
+              if (this.wifiList_connected.length){
                 for (let i = 0; i < this.wifiList_connected.length; i++){
                   let obj={
                     ssid:this.wifiList_connected[i].ssid,
@@ -922,7 +922,7 @@ export default {
                 }
               }
 
-             if (this.wifiList_scanned.length!==0){
+             if (this.wifiList_scanned.length){
                for (let i = 0; i < this.wifiList_memorized.length; i++){
                  let obj={
                    ssid:this.wifiList_memorized[i].ssid,
@@ -931,7 +931,7 @@ export default {
                  this.wifiList.push(obj)
                }
              }
-             if (this.wifiList_scanned.length!==0){
+             if (this.wifiList_scanned.length){
                for (let i = 0; i < this.wifiList_scanned.length; i++){
                  let obj={
                    ssid:this.wifiList_scanned[i].ssid,
