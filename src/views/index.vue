@@ -1295,10 +1295,10 @@ export default {
 !  @ #  $  % ^ &  *   (   )   -   _  + =  {   }   [   ]   |   \   :   ;   "   '  < >  ,   .   ?   /  ~ `
       长度
       最少8 个字符，最长 63 个字符*/
-      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-=[\]{};':",./<>?])[A-Za-z\d~!@#$%^&*()_+-=[\]{};':",./<>?]{8,63}$/.test(this.wifi_pwd)){
-        this.$message.error('WiFi password format is incorrect')
-        return;
-      }
+      // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-=[\]{};':",./<>?])[A-Za-z\d~!@#$%^&*()_+-=[\]{};':",./<>?]{8,63}$/.test(this.wifi_pwd)){
+      //   this.$message.error('WiFi password format is incorrect')
+      //   return;
+      // }
       await this.connectWiFiBYSSID(this.active_wifi_obj.ssid,this.wifi_pwd).then(res=>{
 
       })
