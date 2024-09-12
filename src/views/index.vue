@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="showLog_Wrap">
+    <div class="showLog_Wrap" v-if="isShowLogButton">
       <el-button @click="showLog" v-show="!isShowLog" type="primary" size="mini">显示log</el-button>
       <el-button @click="closeLog" v-show="isShowLog" type="info" size="mini">关闭log</el-button>
     </div>
@@ -52,62 +52,41 @@
             <div class="title-wrap"> <span class="title">WIFI Network</span></div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <div class="card-title">Connected</div>
           <div class="list-list">
             <div class="list-item">
               <div class="list-item-body">
-                <div class="list-item-body-item" v-for="(item,index) in isConnectList" :key="index">
-                  <div class="item-label">Chinanet-001</div>
+                <div class="list-item-body-item" >
+                  <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span class="wifi-name">Chinanet-001</span></div>
                   <div class="list-item-button-wrap">
                     <el-icon class="el-icon-success icon"/>
-                    <el-button size="mini" type="primary" :disabled="!isConnected">Forget</el-button>
                   </div>
+                </div>
+                <div class="list-item-body-item">
+                  <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span class="wifi-name">Chinanet-001</span></div>
+                  <div class="list-item-button-wrap">
+                    <el-icon class="el-icon-success icon"/>
+                  </div>
+                </div>
+                <div class="wifi-password">
+                  <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
+                    <el-form-item label="Password：">
+                      <el-input placeholder="Please enter WiFi password" size="mini" class="input-item"
+                                :disabled="!isConnected"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div class="todo-wifi-button-wrap">
+                    <el-button size="mini" type="primary" :disabled="!isConnected">Forget</el-button>
+                    <el-button size="mini" type="primary" :disabled="!isConnected">Connect</el-button>
+                  </div>
+
+
                 </div>
                 <div v-show="isConnectList.length===0">
                   <el-empty :image-size="50" :description="noDataString"></el-empty>
                 </div>
               </div>
-
             </div>
           </div>
-          <div class="card-title">Memory List</div>
-          <div class="list-list">
-            <div class="list-item">
-              <div class="list-item-body">
-                <div class="list-item-body-item" v-for="(item,index) in memoryList" :key="index">
-                  <div class="item-label">Chinanet-001</div>
-                  <div class="list-item-button-wrap">
-                    <el-button size="mini" type="primary" :disabled="!isConnected">Forget</el-button>
-                  </div>
-                </div>
-                <div v-show="memoryList.length===0">
-                  <el-empty :image-size="50" :description="noDataString"></el-empty>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-          <div class="card-title">Other Networks</div>
-          <div class="list-list">
-            <div class="list-item">
-              <div class="list-item-body">
-                <div class="list-item-body-item" v-for="(item,index) in otherList" :key="index">
-                  <div class="item-label">Chinanet-001</div>
-                  <div class="list-item-button-wrap">
-                    <el-input placeholder="请输入WiFi密码" size="mini" class="input-item"
-                              :disabled="!isConnected"></el-input>
-                    <el-button size="mini" type="primary" :disabled="!isConnected">Connect</el-button>
-                  </div>
-                </div>
-                <div v-show="memoryList.length===0">
-                  <el-empty :image-size="50" :description="noDataString"></el-empty>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </el-card>
 <!--        SaaS Platform-->
         <el-card class="box-card">
@@ -235,7 +214,8 @@ export default {
   data() {
     return {
       isMobile:false,//是否为移动端
-      isShowLog:false,
+      isShowLog:false,//是否显示日志
+      isShowLogButton:true,//是否显示日志按钮
       isConnected: false,//标记是否已连接设备
       deviceOption: {
         // deviceNamePrefix: {namePrefix: 'EM'},
@@ -1053,9 +1033,9 @@ height:auto;
 
 
   .icon {
-    color: green;
-    font-size: 30px;
-    margin-right: 15px;
+    color: #409EFF;
+    font-size: 20px;
+
   }
 
   .box-card {
@@ -1072,6 +1052,7 @@ height:auto;
     .list-list {
       width: 100%;
       display: flex;
+      flex-direction: column;
 
       .list-item {
         width: 100%;
@@ -1101,12 +1082,22 @@ height:auto;
               align-items: center;
               width: 80%;
               flex: 1;
+              .wifi-icon{
+                margin-right: 10px;
+              }
+              .wifi-name{
+                font-size: 14px;
+              }
             }
 
             &.noBorder {
               border: none;
             }
 
+          }
+          .wifi-password{
+            font-size: 14px;
+            margin-top: 15px;
           }
 
           .list-item-body-item:hover {
@@ -1136,7 +1127,7 @@ height:auto;
 
 .iconfont {
   font-size: 26px;
-  color: #377DFF;
+  color: #409EFF;
 
 }
 
@@ -1162,7 +1153,12 @@ height:auto;
     justify-content: center;
   }
 }
-
+.todo-wifi-button-wrap{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
 @media (max-width: 768px) {
   /* 移动端样式 */
   .el-form-item__label{
@@ -1204,7 +1200,6 @@ height:auto;
     }
 
     .title-wrap {
-      margin: 10px auto;
       width: 100%;
 
       .title {
@@ -1220,9 +1215,8 @@ height:auto;
 
 
     .icon {
-      color: green;
-      font-size: 30px;
-      margin-right: 15px;
+
+
     }
 
     .box-card {
@@ -1277,7 +1271,7 @@ height:auto;
 
   .iconfont {
     font-size: 26px;
-    color: #377DFF;
+    color: #409EFF;
 
   }
 

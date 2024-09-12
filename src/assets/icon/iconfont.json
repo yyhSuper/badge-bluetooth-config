@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4766957",
+      "name": "wifi",
+      "font_class": "wifi",
+      "unicode": "e7e0",
+      "unicode_decimal": 59360
+    },
+    {
       "icon_id": "5399558",
       "name": "保存",
       "font_class": "baocun",
