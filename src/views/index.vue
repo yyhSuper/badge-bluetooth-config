@@ -215,7 +215,7 @@ export default {
       isMobile:false,//是否为移动端
       isShowLog:false,//是否显示日志
       isShowLogButton:true,//是否显示日志按钮
-      isConnected: true,//标记是否已连接设备
+      isConnected: false,//标记是否已连接设备
       deviceOption: {
         // deviceNamePrefix: {namePrefix: 'EM'},
         deviceNamePrefix: {namePrefix: 'BSF_'},//蓝牙设备前缀
@@ -231,7 +231,7 @@ export default {
       characteristic: null,//蓝牙特征对象
       isWifiList: true,
       active_wifi_type: -1,//wifi类型:1已连接，2已记住，3已扫描
-      active_wifi_obj: {},//当前选择的wifi
+      active_wifi_obj: {},//当前选择的wifishit
       selectedWifiIndex: -1,//当前选择的wifi index
       wifi_pwd: '',//wifi密码
       wifiList: [
@@ -453,16 +453,17 @@ export default {
         const server = await device.gatt.connect();
 
         // 获取指定的蓝牙服务
-        const service = await server.getPrimaryService('0000fee0-0000-1000-8000-00805f9b34fb');
+        const service = await server.getPrimaryService(this.deviceOption.serviceId);
 
         // 获取服务中的特征，用于后续的读写操作
-        const characteristic = await service.getCharacteristic('0000fee3-0000-1000-8000-00805f9b34fb');
+        const characteristic = await service.getCharacteristic(this.deviceOption.characteristicWriteChannelId);
 
         // 保存连接信息到组件状态
         this.device = device;
         this.server = server;
         this.service = service;
         this.characteristic = characteristic;
+        this.deviceOption.connect = true;// 标记为已连接
         this.isConnected = true; // 更新连接状态
 
         console.log('已连接到设备:', JSON.stringify(device));
@@ -1284,12 +1285,15 @@ height:auto;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: left;
+    justify-content: space-between;
 
 
 
     .icon-wrap {
       margin-left: 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
       .iconfont{
         cursor: pointer;
       }
@@ -1470,6 +1474,7 @@ height:auto;
 
     .title-wrap {
       width: 100%;
+
 
       .title {
         font-size: 14px;
