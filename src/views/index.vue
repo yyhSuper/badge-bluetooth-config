@@ -20,8 +20,12 @@
 
       </div>
       <el-main class="index-main">
-        <div class="title-wrap"><h1 class="title">Device Information</h1></div>
+<!--        Device Information-->
         <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <div class="title-wrap"> <span class="title">Device Information</span></div>
+<!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
           <div class="list-list">
             <div class="list-item">
               <div class="list-item-body">
@@ -42,8 +46,12 @@
             </div>
           </div>
         </el-card>
-        <div class="title-wrap"><h1 class="title">WIFI Network</h1></div>
+<!--        WIFI Network-->
         <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <div class="title-wrap"> <span class="title">WIFI Network</span></div>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
           <div class="card-title">Connected</div>
           <div class="list-list">
             <div class="list-item">
@@ -101,15 +109,19 @@
           </div>
 
         </el-card>
-        <div class="title-wrap">
-          <h1 class="title">SaaS Platform</h1>
-          <div class="icon-wrap">
-            <span class="iconfont icon-baocun"></span>
-            <span class="iconfont icon-bianji"></span>
-          </div>
-        </div>
+<!--        SaaS Platform-->
         <el-card class="box-card">
-          <el-form>
+          <div slot="header" class="clearfix">
+            <div class="title-wrap">
+              <span class="title">SaaS Platform</span>
+              <div class="icon-wrap">
+                <span class="iconfont icon-baocun"></span>
+                <span class="iconfont icon-bianji"></span>
+              </div>
+            </div>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
+          <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
             <el-form-item label="IP Address：">
               <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ip"
                         :disabled="!isConnected"></el-input>
@@ -120,15 +132,19 @@
             </el-form-item>
           </el-form>
         </el-card>
-        <div class="title-wrap">
-          <h1 class="title">Sound Recording</h1>
-          <div class="icon-wrap">
-            <span class="iconfont icon-baocun"></span>
-            <span class="iconfont icon-bianji"></span>
-          </div>
-        </div>
+<!--        Sound Recording-->
         <el-card class="box-card">
-          <el-form label-width="220px">
+          <div slot="header" class="clearfix">
+            <div class="title-wrap">
+              <span class="title">Sound Recording</span>
+              <div class="icon-wrap">
+                <span class="iconfont icon-baocun"></span>
+                <span class="iconfont icon-bianji"></span>
+              </div>
+            </div>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
+          <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
             <el-form-item label="Maximum duration (seconds)：">
               <el-input placeholder="" type="number" :disabled="!isConnected"></el-input>
             </el-form-item>
@@ -136,7 +152,7 @@
               <el-switch
                 v-model="recordingForm.isOpenToWork"
                 :disabled="!isConnected"
-                active-color="#13ce66" active-text="ON" inactive-text="OFF"
+                active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
             </el-form-item>
@@ -144,36 +160,47 @@
               <el-switch
                 v-model="recordingForm.isCloseToWork"
                 :disabled="!isConnected"
-                active-color="#13ce66" active-text="ON" inactive-text="OFF"
+                active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
             </el-form-item>
           </el-form>
         </el-card>
-        <div class="title-wrap">
-          <h1 class="title">USB Unlock</h1>
-          <div class="icon-wrap">
-            <span class="iconfont icon-baocun"></span>
-            <span class="iconfont icon-bianji"></span>
-          </div>
-        </div>
+<!--        USB Unlock-->
         <el-card class="box-card">
-          <el-form label-width="120px">
+          <div slot="header" class="clearfix">
+            <div class="title-wrap">
+              <span class="title">USB Unlock</span>
+              <div class="icon-wrap">
+                <span class="iconfont icon-baocun"></span>
+                <span class="iconfont icon-bianji"></span>
+              </div>
+            </div>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
+          <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
             <el-form-item label="USB Unlock：">
               <el-switch
                 v-model="USBForm.USBUnlock"
                 :disabled="!isConnected"
-                active-color="#13ce66" active-text="ON" inactive-text="OFF"
+                active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
             </el-form-item>
           </el-form>
         </el-card>
-        <div class="title-wrap">
-          <h1 class="title">Restore factory settings</h1>
-          <div class="icon-wrap"></div>
-        </div>
+<!--        Restore factory settings-->
         <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <div class="title-wrap">
+              <span class="title">Restore factory settings</span>
+<!--              <div class="icon-wrap">
+                <span class="iconfont icon-baocun"></span>
+                <span class="iconfont icon-bianji"></span>
+              </div>-->
+            </div>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          </div>
           <div class="warning-wrap">
             <div class="warning-wrap-title">Warning clause</div>
             <div class="warning-wrap-body">
@@ -207,6 +234,7 @@ export default {
   name: 'index',
   data() {
     return {
+      isMobile:false,//是否为移动端
       isShowLog:false,
       isConnected: false,//标记是否已连接设备
       deviceOption: {
@@ -263,6 +291,11 @@ export default {
 
   },
   mounted() {
+    //获取浏览器的当前宽度，做兼容适配移动端
+    let w=document.body.clientWidth;
+    if(w<=768){
+      this.isMobile=true;
+    }
 
     this.checkBluetoothSupport();
     this.init();
@@ -940,8 +973,8 @@ export default {
 }
 </script>
 <style>
-.showLog_Wrap{position: absolute;top:10px;right: 0;padding: 0 15px;}
-#consoleOutput{position: absolute;right: 0;top:60px;width: 50%;background: rgba(0,0,0,.8);color: #fff;z-index: 999;padding: 30px;
+.showLog_Wrap{position: fixed;top:10px;right: 0;padding: 0 15px;}
+#consoleOutput{position: fixed;right: 0;top:60px;width: 50%;background: rgba(0,0,0,.8);color: #fff;z-index: 999;padding: 30px;
 height:auto;
   overflow-y: auto;
 }
@@ -999,20 +1032,19 @@ height:auto;
     padding: 0;
 
   }
+  .title {
+    font-size: 18px;
+    font-weight: bold;
 
+  }
   .title-wrap {
-    margin: 20px auto;
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: left;
 
-    .title {
-      font-size: 18px;
-      font-weight: bold;
 
-    }
 
     .icon-wrap {
       margin-left: 15px;
@@ -1028,6 +1060,7 @@ height:auto;
 
   .box-card {
     width: 100%;
+    margin-top: 30px;
 
     .card-title {
       font-size: 16px;
@@ -1132,6 +1165,9 @@ height:auto;
 
 @media (max-width: 768px) {
   /* 移动端样式 */
+  .el-form-item__label{
+    font-size: 12px;
+  }
   .nav {
     width: 100%;
     max-width: 100%;
