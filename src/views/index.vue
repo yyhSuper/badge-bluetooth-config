@@ -32,13 +32,13 @@
                 <div class="list-item-body-item noBorder">
                   <div class="item-label">deviceSn：</div>
                   <div class="list-item-button-wrap">
-                    <span>V1.5452.454</span>
+                    <span>{{deviceInfo.SN}}</span>
                   </div>
                 </div>
                 <div class="list-item-body-item noBorder">
                   <div class="item-label">Firmware version：</div>
                   <div class="list-item-button-wrap">
-                    <span>V1.5452.454</span>
+                    <span>{{deviceInfo.fwVersion}}</span>
                   </div>
                 </div>
               </div>
@@ -55,33 +55,32 @@
           <div class="list-list">
             <div class="list-item">
               <div class="list-item-body">
-                <div class="list-item-body-item" >
-                  <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span class="wifi-name">Chinanet-001</span></div>
-                  <div class="list-item-button-wrap">
+                <div class="list-item-body-item" :class="{ active: index === selectedWifiIndex }" v-for="(item,index) in wifiList" v-bind:key="index" @click="selectWifi(item,item.type,index)">
+                  <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span class="wifi-name">{{item.ssid}}</span></div>
+                  <div class="list-item-button-wrap" v-show="item.type===1">
                     <el-icon class="el-icon-success icon"/>
                   </div>
-                </div>
-                <div class="list-item-body-item">
-                  <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span class="wifi-name">Chinanet-001</span></div>
-                  <div class="list-item-button-wrap">
-                    <el-icon class="el-icon-success icon"/>
+                  <div class="list-item-button-wrap" v-show="item.type===2">
+                    <el-icon class="iconfont icon-yibaocun icon" style="color: #eee"/>
                   </div>
                 </div>
+
                 <div class="wifi-password">
-                  <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
+                  <el-form :label-width="isMobile?'100px':'220px'" label-position="left" v-show="active_wifi_type===3">
                     <el-form-item label="Password：">
-                      <el-input placeholder="Please enter WiFi password" size="mini" class="input-item"
+                      <el-input v-model="wifi_pwd" placeholder="Please enter WiFi password" size="mini" class="input-item"
                                 :disabled="!isConnected"></el-input>
                     </el-form-item>
                   </el-form>
                   <div class="todo-wifi-button-wrap">
-                    <el-button size="mini" type="primary" :disabled="!isConnected">Forget</el-button>
-                    <el-button size="mini" type="primary" :disabled="!isConnected">Connect</el-button>
+                    <el-button size="mini" type="info"  v-show="active_wifi_type===1||active_wifi_type===2||active_wifi_type===3" @click="cancelSelect">Cancel</el-button>
+                    <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===1||active_wifi_type===2" @click="forgetWifi">Forget</el-button>
+                    <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===3" @click="connectWifi">Connect</el-button>
                   </div>
 
 
                 </div>
-                <div v-show="isConnectList.length===0">
+                <div v-show="wifiList_scanned.length===0">
                   <el-empty :image-size="50" :description="noDataString"></el-empty>
                 </div>
               </div>
@@ -94,8 +93,8 @@
             <div class="title-wrap">
               <span class="title">SaaS Platform</span>
               <div class="icon-wrap">
-                <span class="iconfont icon-baocun"></span>
-                <span class="iconfont icon-bianji"></span>
+                <span class="iconfont icon-baocun" v-show="SaaSFormIsEditor&&isConnected" @click="saveForm('sass')"></span>
+                <span class="iconfont icon-bianji" v-show="!SaaSFormIsEditor&&isConnected" @click="editFrom('sass')"></span>
               </div>
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
@@ -103,11 +102,11 @@
           <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
             <el-form-item label="IP Address：">
               <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ip"
-                        :disabled="!isConnected"></el-input>
+                        :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Port：">
               <el-input placeholder="Please enter the port number" v-model="SaaSForm.port"
-                        :disabled="!isConnected"></el-input>
+                        :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
           </el-form>
         </el-card>
@@ -117,28 +116,28 @@
             <div class="title-wrap">
               <span class="title">Sound Recording</span>
               <div class="icon-wrap">
-                <span class="iconfont icon-baocun"></span>
-                <span class="iconfont icon-bianji"></span>
+                <span class="iconfont icon-baocun" v-show="recordingFormIsEditor&&isConnected" @click="saveForm('recording')"></span>
+                <span class="iconfont icon-bianji" v-show="!recordingFormIsEditor&&isConnected" @click="editFrom('recording')"></span>
               </div>
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
             <el-form-item label="Maximum duration (seconds)：">
-              <el-input placeholder="" type="number" :disabled="!isConnected"></el-input>
+              <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number" :disabled="!recordingFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Automatically start work：">
               <el-switch
-                v-model="recordingForm.isOpenToWork"
-                :disabled="!isConnected"
+                v-model="recordingForm.autoOnDutyWhenPowerOn"
+                :disabled="!recordingFormIsEditor"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
             </el-form-item>
             <el-form-item label="automatically leave work：">
               <el-switch
-                v-model="recordingForm.isCloseToWork"
-                :disabled="!isConnected"
+                v-model="recordingForm.autoOffDutyWhenPowerDown"
+                :disabled="!recordingFormIsEditor"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
@@ -151,8 +150,8 @@
             <div class="title-wrap">
               <span class="title">USB Unlock</span>
               <div class="icon-wrap">
-                <span class="iconfont icon-baocun"></span>
-                <span class="iconfont icon-bianji"></span>
+                <span class="iconfont icon-baocun" v-show="USBFormIsEditor&&isConnected" @click="saveForm('usb')"></span>
+                <span class="iconfont icon-bianji" v-show="!USBFormIsEditor&&isConnected" @click="editFrom('usb')"></span>
               </div>
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
@@ -160,8 +159,8 @@
           <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
             <el-form-item label="USB Unlock：">
               <el-switch
-                v-model="USBForm.USBUnlock"
-                :disabled="!isConnected"
+                v-model="USBForm.unlocked"
+                :disabled="!USBFormIsEditor"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
               </el-switch>
@@ -188,7 +187,7 @@
               <p>3. Your firmware version remains unchanged and cannot be restored to the default firmware</p>
             </div>
             <div class="warning-wrap-button-wrap">
-              <el-button size="mini" type="danger" :disabled="!isConnected">I have read the warning and I want to restore
+              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read the warning and I want to restore
                 the menu
               </el-button>
             </div>
@@ -216,42 +215,63 @@ export default {
       isMobile:false,//是否为移动端
       isShowLog:false,//是否显示日志
       isShowLogButton:true,//是否显示日志按钮
-      isConnected: false,//标记是否已连接设备
+      isConnected: true,//标记是否已连接设备
       deviceOption: {
         // deviceNamePrefix: {namePrefix: 'EM'},
-        deviceNamePrefix: {namePrefix: 'BSF_'},
-        serviceId: '0000fee0-0000-1000-8000-00805f9b34fb',
-        characteristicWriteChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',
-        characteristicReadChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',
-        characteristicWriteChannel: null,
-        characteristicReadChannel: null,
-        connect: false
+        deviceNamePrefix: {namePrefix: 'BSF_'},//蓝牙设备前缀
+        serviceId: '0000fee0-0000-1000-8000-00805f9b34fb',//服务ID
+        characteristicWriteChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',//写入通道ID
+        characteristicReadChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',//读取通道ID
+        characteristicWriteChannel: null,//写入通道对象
+        characteristicReadChannel: null,//读取通道对象
+        connect: false//标记是否已连接
       },
       device: null,//蓝牙设备对象
       service: null,//蓝牙GATT服务器对象
       characteristic: null,//蓝牙特征对象
       isWifiList: true,
-      isConnectList: [//连接列表
+      active_wifi_type: -1,//wifi类型:1已连接，2已记住，3已扫描
+      active_wifi_obj: {},//当前选择的wifi
+      selectedWifiIndex: -1,//当前选择的wifi index
+      wifi_pwd: '',//wifi密码
+      wifiList: [
+        //所有设备列表
+
 
       ],
-      memoryList: [//记忆列表
+      wifiList_connected: [
+        //已连接的设备列表
 
       ],
-      otherList: [
-        //其他网络
+      wifiList_memorized: [
+        //已记忆的设备列表
+
       ],
-      noDataString: 'No data yet',
+      wifiList_scanned: [
+        //已扫描到的设备列表
+
+        ],
+
+      noDataString: 'No data yet',//暂无数据
+      deviceInfo:{
+        // 设备信息
+        SN:"",
+        fwVersion:"",
+      },
+      SaaSFormIsEditor:false,//SaaS平台是否为编辑状态
       SaaSForm: {//SaaS平台
         ip: null,//IP地址
         port: null,//端口
       },
+      recordingFormIsEditor:false,//录音是否为编辑状态
       recordingForm: {//录音
-        maxTime: null,//最大时长
-        isOpenToWork: false,//开机自动上班
-        isCloseToWork: false,//关机自动下班
+        maxRecordDuration: null,//最大时长
+        autoOnDutyWhenPowerOn: false,//开机自动上班
+        autoOffDutyWhenPowerDown: false,//关机自动下班
       },
+      USBFormIsEditor:false,//U盘解锁是否为编辑状态
       USBForm: {//U盘解锁
-        USBUnlock: false,//U盘解锁
+        unlocked: false,//U盘解锁
       }
 
 
@@ -278,15 +298,82 @@ export default {
     }
 
     this.checkBluetoothSupport();
-    this.init();
     this.setup();
 
   },
   methods: {
+    saveForm(type){
+      // TODO: 保存数据
+      // this.SaaSFormIsEditor = false;
+      if(type==='sass'){
+        // TODO: sass校验数据
+        if(!this.SaaSForm.ip){
+          this.$message.error('IP address cannot be empty');
+          return;
+        }
+        if (!this.SaaSForm.port){
+          this.$message.error('Port cannot be empty');
+          return;
+        }
+        this.setSaaS(this.SaaSForm.ip,this.SaaSForm.port).then(res=>{})
+      }
+      if(type==='recording'){
 
+        // TODO: 校验录音数据
+        if(!this.recordingForm.maxRecordDuration){
+          this.$message.error('Max recording duration cannot be empty');
+
+          return;
+        }
+
+        this.setRecord(this.recordingForm.maxRecordDuration,this.recordingForm.autoOnDutyWhenPowerOn,this.recordingForm.autoOffDutyWhenPowerDown).then(res=>{})
+      }
+      if (type==='usb'){
+        // TODO: U盘解锁
+        this.setUStorage(this.USBForm.unlocked).then(res=>{})
+      }
+
+    },
+    editFrom(type){
+      // TODO: 显示编辑框
+     if (type==='sass'){
+       this.SaaSFormIsEditor = true;
+     }else if(type==='recording'){
+       this.recordingFormIsEditor = true;
+     }else if(type==='usb'){
+       this.USBFormIsEditor = true;
+     }else{
+       return
+     }
+
+    },
+    restoreFactorySettings(){
+      // 恢复出厂设置
+      this.restoreFactory().then(res=>{
+
+      }).catch(err=>{
+        this.$message.error(err);
+      })
+    },
     async init() {
       //初始化
+      // 读设备信息
+     await this.getDevice().then(() => {
+        // 读取WiFi热点列表
+        this.fetchMemorizedWifiList().then(() => {
+          // 读SasS平台配置
+          this.getSaaS().then(() => {
+            // 读录音配置
+            this.getRecord().then(() => {
+              // 读U盘配置
+              this.getUStorage().then(() => {
 
+              })
+            })
+          })
+
+        });
+      })
     },
     logSomething() {
       console.log('这是一个测试日志');
@@ -337,20 +424,10 @@ export default {
           await this.getServcie();
           // 获取GATT服务
           await this.connectDeviceAndCacheCharacteristics();
-          // 读取WiFi热点列表
-          this.fetchMemorizedWifiList().then(() => {
-            // 读SasS平台配置
-            this.getSaaS().then(() => {
-              // 读录音配置
-              this.getRecord().then(() => {
-                // 读U盘配置
-                this.getUStorage().then(() => {
+          //数据初始化
+          this.init()
 
-                })
-              })
-            })
 
-          });
 
         }
       } catch (error) {
@@ -446,16 +523,24 @@ export default {
 
     // 写指令
     writeCommand(characteristic, data) {
+      let loading=this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       return new Promise((resolve, reject) => {
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
           .then(() => {
             console.log('Command send success', data);
             this.$message.success('Command send success')
+            loading.close()
             resolve();
           })
           .catch(error => {
             console.error('指令发送失败:', error);
             this.$message.error('指令发送失败:', error)
+            loading.close()
             reject(error);
           });
       });
@@ -464,12 +549,7 @@ export default {
     // 重启设备的命令
     async rebootDevice() {
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // 构建重启设备的JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -482,23 +562,38 @@ export default {
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
+
         resolve(res)
       })
     },
+    /*
+         读设备信息
+         */
+    async getDevice() {
+      console.log('读设备信息')
+      return new Promise(async (resolve,reject) => {
 
+        // JSON-RPC命令
+        const command = {
+          jsonrpc: "2.0",
+          id: 201, // 命令ID，用于匹配请求和响应
+          method: "getDevice", // 调用的方法名
+          params: null // 此命令不需要参数
+        };
+        await this.startNotifications();
+        // 发命令
+        const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
+        resolve(res)
+
+      });
+    },
     /*
       读取WiFi热点列表
       */
     async fetchMemorizedWifiList() {
       console.log('读取WiFi热点列表')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -511,7 +606,7 @@ export default {
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
 
-        loading.close()
+
         resolve(res)
 
       });
@@ -519,15 +614,10 @@ export default {
     /*
       连接指定WiFi热点
       */
-    async getWifiBYSSID(ssid,pwd) {
+    async connectWiFiBYSSID(ssid,pwd) {
       console.log('连接指定WiFi热点')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -541,9 +631,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -553,12 +640,7 @@ export default {
     async forgetWifiBySSID(ssid) {
       console.log('忘记某Wi-Fi')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -571,9 +653,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -583,12 +662,7 @@ export default {
     async getSaaS() {
       console.log('读SasS平台配置')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -601,7 +675,6 @@ export default {
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
         //延迟200毫秒关闭加载
         await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -611,12 +684,6 @@ export default {
     async setSaaS(ipAddress,port) {
       console.log('写入SasS平台修改配置')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -630,9 +697,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -642,12 +706,7 @@ export default {
     async getRecord() {
       console.log('getRecord')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -660,10 +719,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -673,12 +728,7 @@ export default {
     async setRecord(maxRecordDuration,autoOnDutyWhenPowerOn,autoOffDutyWhenPowerDown) {
       console.log('写入录音修改配置')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -693,9 +743,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -705,12 +752,7 @@ export default {
     async getUStorage() {
       console.log('读U盘配置')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -721,9 +763,6 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
         resolve(res)
       });
     },
@@ -733,12 +772,6 @@ export default {
     async setUStorage(unlockedStatus) {
       console.log('写入U盘修改配置')
       return new Promise(async (resolve,reject) => {
-        let loading=this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
@@ -751,9 +784,25 @@ export default {
         await this.startNotifications();
         // 发命令
         const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
-        //延迟200毫秒关闭加载
-        await new Promise(resolve => setTimeout(resolve, 200));
-        loading.close()
+        resolve(res)
+      });
+    },
+    /*
+    恢复出厂设置
+    */
+    async restoreFactory() {
+      console.log('恢复出厂设置')
+      return new Promise(async (resolve,reject) => {
+        // JSON-RPC命令
+        const command = {
+          jsonrpc: "2.0",
+          id: 101, // 命令ID，用于匹配请求和响应
+          method: "restoreFactory", // 调用的方法名
+          params:null
+        };
+        await this.startNotifications();
+        // 发命令
+        const res=await this.writeCommand(this.deviceOption.characteristicWriteChannel,command);
         resolve(res)
       });
     },
@@ -789,47 +838,235 @@ export default {
         console.log('解析后的对象:');
         console.log(response);
         console.log('text 是有效的 JSON 格式');
+        //重启设备
         if (response.id === 100) {
-          //重启设备
+          console.log('通知返回重启设备response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('reboot error message:',response.error.message)
+            console.error('reboot error message:',response.error.message)
+            return
+          }
+          if (response.result){
+           this.init()
+
+          }else{
+            this.$message.error('reboot error',response.error.message)
+          }
         }
+        // 恢复出厂设置
+        if (response.id === 101) {
+          console.log('通知返回恢复出厂设置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('restoreFactory error message:',response.error.message)
+            console.error('restoreFactory error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.init()
+
+          }else{
+            this.$message.error('restoreFactory error',response.error.message)
+          }
+        }
+        // 读取WiFi热点列表
         if (response.id === 201) {
-          // 读取WiFi热点列表
-          console.log('读取WiFi热点列表',response)
 
+          console.log('通知返回读取WiFi热点列表response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('getWiFiList error message:',response.error.message)
+            console.error('getWiFiList error message:',response.error.message)
+            return
+          }
+          //{"jsonrpc":"2.0","id":201,"result":{"scanned":[{"ssid":"ELFLECT"},{"ssid":"611"},{"ssid":"gjlx"},{"ssid":"DIRECT-gH-EShare-2321"},{"ssid":"ChinaNet-sbga"},{"ssid":"longsailing"},{"ssid":"cxzx666"},{"ssid":"cxzx666"}],"connected":null,"memorized":[]}}
+          this.wifiList_scanned=response.result.scanned!==null?response.result.scanned:[];//已扫描到的设备列表
+          this.wifiList_connected=response.result.connected!==null?response.result.connected:[];//已连接的设备列表
+          this.wifiList_memorized=response.result.memorized!==null?response.result.memorized:[];//已记忆的设备列表
+          this.wifiList=[]
+          this.active_wifi_obj=null
+          this.active_wifi_type=null
+          this.selectedWifiIndex=-1
+
+          for (let i = 0; i < this.wifiList_connected.length; i++){
+            let obj={
+              ssid:this.wifiList_connected[i].ssid,
+              type:1
+            }
+            this.wifiList.push(obj)
+          }
+          for (let i = 0; i < this.wifiList_memorized.length; i++){
+            let obj={
+              ssid:this.wifiList_memorized[i].ssid,
+              type:2
+            }
+            this.wifiList.push(obj)
+          }
+          for (let i = 0; i < this.wifiList_scanned.length; i++){
+            let obj={
+              ssid:this.wifiList_scanned[i].ssid,
+              type:3
+            }
+            this.wifiList.push(obj)
+          }
+          console.log('所有wifi 列表',this.wifiList)
         }
+        // 连接指定WiFi热点
         if (response.id === 202) {
-          // 连接指定WiFi热点
-          console.log('连接指定WiFi热点',response)
+
+
+          console.log('通知返回连接指定WiFi热点response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('connectWiFi error message:',response.error.message)
+            console.error('connectWiFi error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.fetchMemorizedWifiList().then(()=>{
+              this.$message.success('connectWiFi success')
+            })
+
+          }else{
+            this.$message.error('connectWiFi error',response.error.message)
+          }
+
 
         }
+        // 忘记指定WiFi热点
         if (response.id === 203) {
-          // 忘记指定WiFi热点
-          console.log('忘记指定WiFi热点',response)
+
+          console.log('通知返回忘记指定WiFi热点response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('forgetWiFi error message:',response.error.message)
+            console.error('forgetWiFi error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.fetchMemorizedWifiList().then(()=>{
+              this.$message.success('forgetWiFi success')
+            })
+
+          }else{
+            this.$message.error('forgetWiFi error',response.error.message)
+          }
         }
+        // 读SasS平台配置
         if (response.id === 204) {
-          // 读SasS平台配置
-          console.log('读SasS平台配置',response)
+
+          console.log('通知返回读SasS平台配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('getSaaS error message:',response.error.message)
+            console.error('getSaaS error message:',response.error.message)
+            return
+          }
+          if (response.result){
+           this.SaaSForm=response.result
+            this.SaaSFormIsEditor=false
+
+          }else{
+            this.$message.error('getSaaS error',response.error.message)
+          }
         }
+        // 写入SasS平台修改配置
         if (response.id === 205) {
-          // 写入SasS平台修改配置
-          console.log('写入SasS平台修改配置',response)
+          console.log('通知返回写入SasS平台修改配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('setSaaS error message:',response.error.message)
+            console.error('setSaaS error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.getSaaS().then(res=>{
+              this.$message.success('setSaaS success')
+            })
+
+
+          }else{
+            this.$message.error('setSaaS error',response.error.message)
+          }
         }
+        // 读录音配置
         if (response.id === 206) {
-          // 读录音配置
-          console.log('读录音配置',response)
+          console.log('通知返回读录音配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('getRecord error message:',response.error.message)
+            console.error('getRecord error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.recordingForm=response.result
+            this.recordingFormIsEditor=false
+
+          }else{
+            this.$message.error('getRecord error',response.error.message)
+          }
         }
+        // 写入录音配置
         if (response.id === 207) {
-          // 写入录音配置
-          console.log('写入录音配置',response)
+          console.log('通知返回写入录音配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('setRecord error message:',response.error.message)
+            console.error('setRecord error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.getRecord().then(res=>{
+              this.$message.success('setRecord success')
+            })
+
+
+          }else{
+            this.$message.error('setSaaS error',response.error.message)
+          }
         }
+        // 读U盘配置
         if (response.id === 208) {
-          // 读U盘配置
-          console.log('读U盘配置',response)
+          console.log('通知返回读U盘配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('getUStorage error message:',response.error.message)
+            console.error('getUStorage error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.USBForm=response.result
+            this.USBFormIsEditor=false
+
+          }else{
+            this.$message.error('getUStorage error',response.error.message)
+          }
         }
-        if (response.id === 208) {
-          // 写入U盘修改配置
-          console.log('写入U盘修改配置',response)
+        // 写入U盘修改配置
+        if (response.id === 209) {
+          console.log('通知返回写入U盘修改配置response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('setUStorage error message:',response.error.message)
+            console.error('setUStorage error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.getUStorage().then(res=>{
+              this.$message.success('setUStorage success')
+            })
+
+
+          }else{
+            this.$message.error('setSaaS error',response.error.message)
+          }
         }
+        // 读设备信息
+        if (response.id === 210) {
+          console.log('通知返回读设备信息response',response)
+          if (response.result ===undefined&&response.error!==null){
+            this.$message.error('getDevice error message:',response.error.message)
+            console.error('getDevice error message:',response.error.message)
+            return
+          }
+          if (response.result){
+            this.deviceInfo=response.result
+
+          }else{
+            this.$message.error('getDevice error',response.error.message)
+          }
+        }
+
         event.target.removeEventListener('characteristicvaluechanged', new function () {
           console.log('移除监听');
         });
@@ -838,32 +1075,6 @@ export default {
         console.error('解析 JSON 失败:', error);
         console.error('text 不是有效的 JSON 格式');
       }
-
-
-    },
-    // 构建记忆wifi模板
-    appendMemorizrdWiFiList(wifiName) {
-      // 构建记忆wifi模板
-      this.memoryList.push(wifiName);
-
-    },
-    // 渲染邻里周围wifi列表
-    appendAddingWiFiList(nearbyWifiListJson) {
-
-      if (nearbyWifiListJson.code !== 0 && nearbyWifiListJson.code !== '0') {
-        this.isConnected = false
-        return;
-      }
-      var nearbyWifiList = nearbyWifiListJson.msg;
-      if (!nearbyWifiList || nearbyWifiList.length <= 0) {
-        this.isConnected = false
-        return;
-      }
-
-    },
-//  加载中逻辑
-    toggleLoading(status, prefix) {
-
     },
     // 检查浏览器是否支持蓝牙
     checkBluetoothSupport() {
@@ -929,8 +1140,59 @@ export default {
         console.log("其他支持 Web Bluetooth API 的浏览器");
         return true; // 假设其他支持的浏览器无需版本检查
       }
-    }
-    ,
+    },
+    selectWifi(item,type,index){
+      // 选择wifi
+      this.active_wifi_obj=item
+      this.active_wifi_type=type
+      this.selectedWifiIndex=index
+      this.wifi_pwd=''
+      console.log(this.active_wifi_obj,this.active_wifi_type)
+
+    },
+
+    cancelSelect(){
+      this.selectedWifiIndex=-1
+      this.active_wifi_type = ''
+      this.active_wifi_obj={}
+      this.wifi_pwd=''
+    },
+    async forgetWifi(){
+      // 忘记指定WiFi热点
+      if (!this.active_wifi_obj){
+        this.$message.error('Please select a WiFi')
+        return;
+      }
+      await this.forgetWifi(this.active_wifi_obj.ssid).then(res=>{
+
+      })
+    },
+    async connectWifi(){
+      // 连接指定WiFi热点
+      if (!this.wifi_pwd){
+        this.$message.error('Please enter WiFi password')
+        return;
+      }
+      if (!this.active_wifi_obj){
+        this.$message.error('Please select a WiFi')
+        return;
+      }
+      //密码是否符合规则字母 ：大小写字母（A-Z, a-z）
+     /* 数字 ：0-9
+      特殊字符 ：
+!  @ #  $  % ^ &  *   (   )   -   _  + =  {   }   [   ]   |   \   :   ;   "   '  < >  ,   .   ?   /  ~ `
+      长度
+      最少8 个字符，最长 63 个字符*/
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-=[\]{};':",./<>?])[A-Za-z\d~!@#$%^&*()_+-=[\]{};':",./<>?]{8,63}$/.test(this.wifi_pwd)){
+        this.$message.error('WiFi password format is incorrect')
+        return;
+      }
+      await this.connectWiFiBYSSID(this.active_wifi_obj.ssid,this.wifi_pwd).then(res=>{
+
+      })
+
+
+    },
     showLog(){
       this.isShowLog = true
     },
@@ -1028,6 +1290,9 @@ height:auto;
 
     .icon-wrap {
       margin-left: 15px;
+      .iconfont{
+        cursor: pointer;
+      }
     }
   }
 
@@ -1101,7 +1366,11 @@ height:auto;
           }
 
           .list-item-body-item:hover {
-            background: rgba(64, 158, 255, 0.2);
+            background: rgba(64, 158, 255, 0.1);
+            cursor: pointer;
+          }
+          .list-item-body-item.active {
+            background: rgba(64, 158, 255, 0.5);
             cursor: pointer;
           }
         }
