@@ -735,8 +735,6 @@ export default {
           id: 206, // 命令ID，用于匹配请求和响应
           method: "getRecord", // 调用的方法名
           params:null
-
-
         };
         await this.startNotifications();
         // 发命令
@@ -1122,13 +1120,14 @@ export default {
       if (typeof text !== 'string') {
         console.error('text 不是string');
         text.toString()
-        console.error('转换string');
-        console.error(text);
+        console.log('转换string');
+        console.log(text);
       }
       try {
         JSON.parse(text);
         return true; // 如果没有抛出错误，则说明是有效的 JSON
       } catch (e) {
+        console.error(e)
         return false; // 抛出错误则不是有效的 JSON
       }
     },
