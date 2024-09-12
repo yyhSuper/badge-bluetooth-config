@@ -860,7 +860,7 @@ export default {
         console.log('返回的通知指令decode -->', text);
         console.log('返回的通知指令类型 -->', typeof text);
         // 清理字符串中的空白字符和其他可能的干扰字符
-        text = JSON.stringify(text)
+        // text = JSON.stringify(text)
         // 检查 text 是否为 JSON
         if (this.isJson(text)) {
           try {
