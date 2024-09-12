@@ -872,7 +872,7 @@ export default {
             //重启设备
             if (response.id === 100) {
               console.log('通知返回重启设备response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('reboot error message:',response.error.message)
                 console.error('reboot error message:',response.error.message)
                 return
@@ -881,13 +881,16 @@ export default {
                 this.init()
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('reboot error',response.error.message)
               }
             }
             // 恢复出厂设置
             if (response.id === 101) {
               console.log('通知返回恢复出厂设置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('restoreFactory error message:',response.error.message)
                 console.error('restoreFactory error message:',response.error.message)
                 return
@@ -896,6 +899,9 @@ export default {
                 this.init()
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('restoreFactory error',response.error.message)
               }
             }
@@ -903,7 +909,7 @@ export default {
             if (response.id === 201) {
 
               console.log('通知返回读取WiFi热点列表response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('getWiFiList error message:',response.error.message)
                 console.error('getWiFiList error message:',response.error.message)
                 return
@@ -953,7 +959,7 @@ export default {
 
 
               console.log('通知返回连接指定WiFi热点response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('connectWiFi error message:',response.error.message)
                 console.error('connectWiFi error message:',response.error.message)
                 return
@@ -964,6 +970,9 @@ export default {
                 })
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('connectWiFi error',response.error.message)
               }
 
@@ -973,7 +982,7 @@ export default {
             if (response.id === 203) {
 
               console.log('通知返回忘记指定WiFi热点response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('forgetWiFi error message:',response.error.message)
                 console.error('forgetWiFi error message:',response.error.message)
                 return
@@ -984,6 +993,9 @@ export default {
                 })
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('forgetWiFi error',response.error.message)
               }
             }
@@ -991,7 +1003,7 @@ export default {
             if (response.id === 204) {
 
               console.log('通知返回读SasS平台配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('getSaaS error message:',response.error.message)
                 console.error('getSaaS error message:',response.error.message)
                 return
@@ -1001,13 +1013,16 @@ export default {
                 this.SaaSFormIsEditor=false
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('getSaaS error',response.error.message)
               }
             }
             // 写入SasS平台修改配置
             if (response.id === 205) {
               console.log('通知返回写入SasS平台修改配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('setSaaS error message:',response.error.message)
                 console.error('setSaaS error message:',response.error.message)
                 return
@@ -1019,13 +1034,16 @@ export default {
 
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('setSaaS error',response.error.message)
               }
             }
             // 读录音配置
             if (response.id === 206) {
               console.log('通知返回读录音配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('getRecord error message:',response.error.message)
                 console.error('getRecord error message:',response.error.message)
                 return
@@ -1035,13 +1053,17 @@ export default {
                 this.recordingFormIsEditor=false
 
               }else{
+
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('getRecord error',response.error.message)
               }
             }
             // 写入录音配置
             if (response.id === 207) {
               console.log('通知返回写入录音配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('setRecord error message:',response.error.message)
                 console.error('setRecord error message:',response.error.message)
                 return
@@ -1053,13 +1075,16 @@ export default {
 
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('setSaaS error',response.error.message)
               }
             }
             // 读U盘配置
             if (response.id === 208) {
               console.log('通知返回读U盘配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('getUStorage error message:',response.error.message)
                 console.error('getUStorage error message:',response.error.message)
                 return
@@ -1069,13 +1094,16 @@ export default {
                 this.USBFormIsEditor=false
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('getUStorage error',response.error.message)
               }
             }
             // 写入U盘修改配置
             if (response.id === 209) {
               console.log('通知返回写入U盘修改配置response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('setUStorage error message:',response.error.message)
                 console.error('setUStorage error message:',response.error.message)
                 return
@@ -1087,13 +1115,16 @@ export default {
 
 
               }else{
+                if (response.error.message===undefined){
+                  return;
+                }
                 this.$message.error('setSaaS error',response.error.message)
               }
             }
             // 读设备信息
             if (response.id === 210) {
               console.log('通知返回读设备信息response',response)
-              if (response.result ===undefined&&response.error!==null){
+              if (response.result ===undefined&&response.error!==null&&response.error.message!==undefined){
                 this.$message.error('getDevice error message:',response.error.message)
                 console.error('getDevice error message:',response.error.message)
                 return
@@ -1102,6 +1133,9 @@ export default {
                 this.deviceInfo=response.result
 
               }else{
+                if (c===undefined){
+                  return;
+                }
                 this.$message.error('getDevice error',response.error.message)
               }
             }
