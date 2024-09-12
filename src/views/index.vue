@@ -101,7 +101,7 @@
           </div>
           <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
             <el-form-item label="IP Address：">
-              <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ip"
+              <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ipAddress"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Port：">
