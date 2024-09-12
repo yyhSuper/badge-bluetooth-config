@@ -60,9 +60,9 @@
                   <div class="list-item-button-wrap" v-show="item.type===1">
                     <el-icon class="el-icon-success icon"/>
                   </div>
-                  <div class="list-item-button-wrap" v-show="item.type===2">
+<!--                  <div class="list-item-button-wrap" v-show="item.type===2">
                     <el-icon class="iconfont icon-yibaocun icon" style="color: #eee"/>
-                  </div>
+                  </div>-->
                 </div>
 
                 <div class="wifi-password">
@@ -74,7 +74,7 @@
                   </el-form>
                   <div class="todo-wifi-button-wrap">
                     <el-button size="mini" type="info"  v-show="active_wifi_type===1||active_wifi_type===2||active_wifi_type===3" @click="cancelSelect">Cancel</el-button>
-                    <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===1||active_wifi_type===2" @click="forgetWifi">Forget</el-button>
+                    <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===1||active_wifi_type===2" @click="forgetWifiClick">Forget</el-button>
                     <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===3" @click="connectWifi">Connect</el-button>
                   </div>
 
@@ -1245,7 +1245,7 @@ export default {
       this.active_wifi_obj={}
       this.wifi_pwd=''
     },
-    async forgetWifi(){
+    async forgetWifiClick(){
       // 忘记指定WiFi热点
       if (!this.active_wifi_obj){
         this.$message.error('Please select a WiFi')
