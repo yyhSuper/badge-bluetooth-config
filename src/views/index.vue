@@ -105,7 +105,7 @@
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Port：">
-              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port"
+              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
           </el-form>
