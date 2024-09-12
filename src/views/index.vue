@@ -1131,6 +1131,7 @@ export default {
               }
               if (response.result){
                 this.deviceInfo=response.result
+                console.log('deviceInfo',this.deviceInfo)
 
               }else{
                 if (response.error.message===undefined){
