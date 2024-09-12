@@ -859,6 +859,8 @@ export default {
         var text = decoder.decode(value);
         console.log('返回的通知指令decode -->', text);
         console.log('返回的通知指令类型 -->', typeof text);
+        // 清理字符串中的空白字符和其他可能的干扰字符
+        text = this.cleanJsonString(text);
         // 检查 text 是否为 JSON
         if (this.isJson(text)) {
           try {
@@ -1116,6 +1118,51 @@ export default {
 
 
     },
+    // 清理字符串中的空白字符和其他可能的干扰字符
+     cleanJsonString(text) {
+  // 去除前后空白字符
+  text = text.trim();
+
+  // 替换内部空白字符
+  text = text.replace(/\s+/g, '');
+
+  // 检查并修复特定位置的问题
+  text = this.fixJsonAtPosition(text, 124);
+
+  return text;
+},
+
+// 修复特定位置的问题
+ fixJsonAtPosition(text, position) {
+  // 获取位置前后的子字符串
+  const before = text.slice(0, position);
+  const after = text.slice(position);
+
+  // 检查当前位置的字符
+  const char = after.charAt(0);
+
+  // 如果是非法字符，尝试替换或删除
+  if (!this.isValidJsonChar(char)) {
+    // 尝试替换为合法字符
+    const fixedChar = this.fixInvalidChar(char);
+    text = before + fixedChar + after.slice(1);
+  }
+
+  return text;
+},
+
+// 检查字符是否为合法的 JSON 字符
+ isValidJsonChar(char) {
+  // JSON 字符集：数字、字母、逗号、冒号、引号、大括号、方括号
+  return /[a-zA-Z0-9,:{}" ]/.test(char);
+},
+
+// 修复非法字符
+ fixInvalidChar(char) {
+  // 可以根据具体情况调整修复策略
+  // 例如，替换为最近的合法字符
+  return ' ';
+},
     isJson(text) {
       if (typeof text !== 'string') {
         console.error('text 不是string');
