@@ -1099,7 +1099,9 @@ export default {
     isJson(text) {
       if (typeof text !== 'string') {
         console.error('text 不是string');
-        return false;
+        text.toString()
+        console.error('转换string');
+        console.error(text);
       }
       try {
         JSON.parse(text);
