@@ -912,7 +912,17 @@ export default {
               this.active_wifi_obj=null
               this.active_wifi_type=null
               this.selectedWifiIndex=-1
+
+
+
               if (this.wifiList_connected!==null&&this.wifiList_connected.length){
+                //如果当前已经连接的wifiList_connected，不在扫描列表里面，删除
+                for (let i = 0; i < this.wifiList_connected.length; i++){
+                  let index=this.wifiList_scanned.findIndex(item=>item.ssid===this.wifiList_connected[i].ssid)
+                  if (index===-1){
+                    this.wifiList_connected.splice(i,1)
+                  }
+                }
                 for (let i = 0; i < this.wifiList_connected.length; i++){
                   let obj={
                     ssid:this.wifiList_connected[i].ssid,
@@ -940,6 +950,22 @@ export default {
                  this.wifiList.push(obj)
                }
              }
+             //wifiList 去重，根据ssid判断
+              let newArr = [];
+              for (let i = 0; i < this.wifiList.length; i++) {
+                let item = this.wifiList[i];
+                let isExist = false;
+                for (let j = 0; j < newArr.length; j++) {
+                  if (item.ssid === newArr[j].ssid) {
+                    isExist = true;
+                    break;
+                  }
+                }
+                if (!isExist) {
+                  newArr.push(item);
+                }
+              }
+              this.wifiList=newArr
 
 
               console.log('所有wifi 列表',this.wifiList)
@@ -1294,6 +1320,8 @@ export default {
   beforeUpdate() {
   },
   beforeDestroy() {
+    //重启设备
+    this.rebootDevice()
 
   },
   // 挂载前状态(里面是操作)
