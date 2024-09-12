@@ -217,7 +217,7 @@ export default {
       isShowLogButton:true,//是否显示日志按钮
       isConnected: false,//标记是否已连接设备
       deviceOption: {
-        deviceNamePrefix: {namePrefix: 'BSF_'},//蓝牙设备前缀
+        deviceNamePrefix: {namePrefix: 'BSF-'},//蓝牙设备前缀
         serviceId: '0000fee0-0000-1000-8000-00805f9b34fb',//服务ID
         characteristicWriteChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',//写入通道ID
         characteristicReadChannelId: '0000fee3-0000-1000-8000-00805f9b34fb',//读取通道ID
@@ -864,8 +864,10 @@ export default {
         // 检查 text 是否为 JSON
         if (this.isJson(text)) {
           try {
+            console.log('JSON.parse前:');
+            console.log(text);
             const response = JSON.parse(text); // 解析 JSON
-            console.log('解析后的对象:', response);
+            console.log('JSON.parse后:');
             console.log(response);
             //重启设备
             if (response.id === 100) {
