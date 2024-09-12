@@ -1097,6 +1097,10 @@ export default {
 
     },
     isJson(text) {
+      if (typeof text !== 'string') {
+        console.error('text 不是string');
+        return false;
+      }
       try {
         JSON.parse(text);
         return true; // 如果没有抛出错误，则说明是有效的 JSON
