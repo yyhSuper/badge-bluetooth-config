@@ -1251,7 +1251,7 @@ export default {
         this.$message.error('Please select a WiFi')
         return;
       }
-      await this.forgetWifi(this.active_wifi_obj.ssid).then(res=>{
+      await this.forgetWifiBySSID(this.active_wifi_obj.ssid).then(res=>{
 
       })
     },
