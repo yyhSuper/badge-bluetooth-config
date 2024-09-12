@@ -131,7 +131,7 @@
                 v-model="recordingForm.autoOnDutyWhenPowerOn"
                 :disabled="!recordingFormIsEditor"
                 active-color="#13ce66"
-                inactive-color="#ff4949">
+                inactive-color="#c">
               </el-switch>
             </el-form-item>
             <el-form-item label="automatically leave work：">
@@ -139,7 +139,7 @@
                 v-model="recordingForm.autoOffDutyWhenPowerDown"
                 :disabled="!recordingFormIsEditor"
                 active-color="#13ce66"
-                inactive-color="#ff4949">
+                inactive-color="#eee">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -162,7 +162,7 @@
                 v-model="USBForm.unlocked"
                 :disabled="!USBFormIsEditor"
                 active-color="#13ce66"
-                inactive-color="#ff4949">
+                inactive-color="#eee">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -314,6 +314,20 @@ export default {
           this.$message.error('Port cannot be empty');
           return;
         }
+        //校验ip地址
+        let reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+        if (!reg.test(this.SaaSForm.ip)){
+          this.$message.error('IP address format error');
+          return;
+        }
+        //端口转为整数类型
+        this.SaaSForm.port = parseInt(this.SaaSForm.port);
+        // TODO: 校验端口
+        if(this.SaaSForm.port<=0 || this.SaaSForm.port>65535){
+          this.$message.error('Port range is 1-65535');
+          return;
+        }
+
         this.setSaaS(this.SaaSForm.ip,this.SaaSForm.port).then(res=>{})
       }
       if(type==='recording'){
@@ -324,6 +338,14 @@ export default {
 
           return;
         }
+        //转整为整数
+        this.recordingForm.maxRecordDuration = parseInt(this.recordingForm.maxRecordDuration);
+        //TODO 校验录音时长并转为整数类型
+        if(isNaN(this.recordingForm.maxRecordDuration)){
+          this.$message.error('Max recording duration must be a number');
+          return;
+        }
+
 
         this.setRecord(this.recordingForm.maxRecordDuration,this.recordingForm.autoOnDutyWhenPowerOn,this.recordingForm.autoOffDutyWhenPowerDown).then(res=>{})
       }
@@ -1249,8 +1271,8 @@ export default {
 }
 </script>
 <style>
-.showLog_Wrap{position: fixed;top:10px;right: 0;padding: 0 15px;}
-#consoleOutput{position: fixed;right: 0;top:60px;width: 50%;background: rgba(0,0,0,.8);color: #fff;z-index: 999;padding: 30px;
+.showLog_Wrap{position: fixed;top:10px;left: 15px;padding: 0 15px;z-index: 1000}
+#consoleOutput{position: fixed;left: 15px;top:60px;width: 50%;background: rgba(0,0,0,.8);color: #fff;z-index: 999;padding: 30px;
 height:auto;
   overflow-y: auto;
 }
