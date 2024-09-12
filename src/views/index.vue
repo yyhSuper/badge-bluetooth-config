@@ -912,7 +912,7 @@ export default {
               this.active_wifi_obj=null
               this.active_wifi_type=null
               this.selectedWifiIndex=-1
-              if (this.wifiList_connected.length){
+              if (this.wifiList_connected!==null&&this.wifiList_connected.length){
                 for (let i = 0; i < this.wifiList_connected.length; i++){
                   let obj={
                     ssid:this.wifiList_connected[i].ssid,
