@@ -1133,7 +1133,7 @@ export default {
                 this.deviceInfo=response.result
 
               }else{
-                if (c===undefined){
+                if (response.error.message===undefined){
                   return;
                 }
                 this.$message.error('getDevice error',response.error.message)
