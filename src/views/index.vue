@@ -1349,9 +1349,8 @@ export default {
         if (this.rebootConfirmed) {
             this.rebootDevice();  // 用户确认离开后，重启设备
         } else {
-            // 如果用户选择不离开，不做任何处理
           this.rebootDevice();  // 用户确认离开后，重启设备
-            console.log('用户取消了操作，设备不会重启');
+            console.log('设备会重启');
         }
     },
     handleUnload() {
