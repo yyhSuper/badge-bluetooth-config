@@ -449,7 +449,6 @@ export default {
     },
     async connectToDevice() {
       let isSupport = this.checkBluetoothSupport()
-      console.log(isSupport)
       if (isSupport) {
         //当前浏览器支持连接蓝牙设备
         this.onReadConnectClick().then(res => {
@@ -480,15 +479,16 @@ export default {
 
         }
       } catch (error) {
-        console.log('Argh! ' + error);
-        alert('Argh! ' + error);
+        console.error('Argh! ' + error);
+        this.$message.error(error);
+
       }
     },
     /*
         扫描蓝牙设备
        */
     async startScan() {
-      console.log('Requesting any Bluetooth Device...');
+      console.log('Requesting  Bluetooth Device...');
 
       try {
         const config = {
@@ -557,13 +557,39 @@ export default {
       this.server = null; // 清空服务器信息
       this.service = null; // 清空服务信息
       this.characteristic = null; // 清空特征信息
+      this.active_wifi_type=-1
+      this.active_wifi_obj=null
+      this.wifiList=[]
+      this.wifiList_connected=[]
+      this.wifiList_memorized=[]
+      this.wifiList_scanned=[]
+      this.deviceInfo={
+        SN: "",
+        fwVersion: "",
+      }
+      this.SaaSFormIsEditor=false
+      this.SaaSForm={
+        ip: null,//IP地址
+        port: null,//端口
+      }
+      this.recordingFormIsEditor=false
+      this.recordingForm={
+        maxRecordDuration: null,//最大时长
+        autoOnDutyWhenPowerOn: false,//开机自动上班
+        autoOffDutyWhenPowerDown: false,//关机自动下班
+      }
+      this.USBFormIsEditor=false
+      this.USBForm= {
+        unlocked: false,//U盘解锁
+      }
+
         localStorage.removeItem('isConnected');
     },
     /*
         获取service服务
         */
     async getServcie() {
-      console.log('获取蓝牙Servcie服务')
+      // console.log('获取蓝牙Servcie服务')
       console.log('Connecting to GATT Server...');
       const server = await this.device.gatt.connect();
       this.deviceOption.connect = await this.device.gatt.connected;
