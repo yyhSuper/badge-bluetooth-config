@@ -56,40 +56,37 @@
             <div class="list-item">
               <div class="list-item-body">
                 <div class="list-item-body-item" :class="{ active: index === selectedWifiIndex }"
-                     v-for="(item,index) in wifiList" v-bind:key="index" @click="selectWifi(item,item.type,index)">
+                     v-for="(wifi,index) in wifiList" :key="wifi.ssid" @click="selectWifi(wifi,index)">
                   <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span
-                    class="wifi-name">{{ item.ssid }}</span></div>
-                  <div class="list-item-button-wrap" v-show="item.type===1">
+                    class="wifi-name">{{ wifi.ssid }}</span></div>
+                  <div class="list-item-button-wrap" v-if="wifiList_connected!==null&&wifi.ssid===wifiList_connected.ssid">
                     <el-icon class="el-icon-success icon"/>
                   </div>
-                  <!--                  <div class="list-item-button-wrap" v-show="item.type===2">
-                                      <el-icon class="iconfont icon-yibaocun icon" style="color: #eee"/>
-                                    </div>-->
-                </div>
 
+                </div>
                 <div class="wifi-password">
-                  <el-form :label-width="isMobile?'100px':'220px'" label-position="left" v-show="active_wifi_type===3">
+                  <el-form :label-width="isMobile?'100px':'220px'" label-position="left" v-if="showForm">
                     <el-form-item label="Password：">
                       <el-input v-model="wifi_pwd" placeholder="Please enter WiFi password" size="mini"
                                 class="input-item"
                                 :disabled="!isConnected"></el-input>
                     </el-form-item>
+
                   </el-form>
                   <div class="todo-wifi-button-wrap">
-                    <el-button size="mini" type="info"
-                               v-show="active_wifi_type===1||active_wifi_type===2||active_wifi_type===3"
-                               @click="cancelSelect">Cancel
-                    </el-button>
-                    <el-button size="mini" type="primary" :disabled="!isConnected"
-                               v-show="active_wifi_type===1||active_wifi_type===2" @click="forgetWifiClick">Forget
-                    </el-button>
-                    <el-button size="mini" type="primary" :disabled="!isConnected" v-show="active_wifi_type===3"
-                               @click="connectWifi">Connect
-                    </el-button>
+                    <el-button v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1" size="mini" type="info" @click="cancelSelect">Cancel</el-button>
+                    <el-button v-if="showForm" size="mini" type="primary" :disabled="!isConnected"  @click="connectWifi">Connect</el-button>
+                    <el-button
+                        v-if="!showForm&&selectedWifiIndex!==-1"
+                        class="forget-button"
+                        size="mini"
+                        type="primary"
+                        :disabled="!isConnected"
+                        @click="forgetWifiClick"
+                    >Forget</el-button>
                   </div>
-
-
                 </div>
+
                 <div v-show="wifiList_scanned.length===0">
                   <el-empty :image-size="50" :description="noDataString"></el-empty>
                 </div>
@@ -298,7 +295,16 @@ export default {
 
     }
   },
-  computed: {},
+  computed: {
+    showForm() {
+      return (
+          this.active_wifi_obj.ssid !== '' &&
+          this.selectedWifiIndex !== -1 &&
+          this.active_wifi_obj.ssid !== this.wifiList_connected.ssid &&
+          (!this.wifiList_memorized.length || this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid))
+      );
+    }
+  },
   // 监听语言变化
   watch: {},
 
@@ -312,6 +318,7 @@ export default {
 
 
   },
+
   mounted() {
     //获取浏览器的当前宽度，做兼容适配移动端
     let w = document.body.clientWidth;
@@ -539,7 +546,7 @@ export default {
       console.log('> Bluetooth Device disconnected');
       try {
         this.rest()
-        this.isConnected = false
+
           localStorage.removeItem('isConnected');
       } catch (error) {
         this.$message.error('Argh! ' + error)
@@ -558,7 +565,9 @@ export default {
       this.service = null; // 清空服务信息
       this.characteristic = null; // 清空特征信息
       this.active_wifi_type=-1
-      this.active_wifi_obj=null
+      this.active_wifi_obj={
+        "ssid":""
+      }
       this.wifiList=[]
       this.wifiList_connected=[]
       this.wifiList_memorized=[]
@@ -614,7 +623,7 @@ export default {
       return new Promise((resolve, reject) => {
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
           .then(() => {
-            // console.log('Command send success', data);
+            console.log('Command send success', data);
             this.$message.success('Command send success')
             loading.close()
             resolve();
@@ -906,6 +915,22 @@ export default {
           });
       });
     },
+// 判断是否为已连接网络
+    isWifiConnected(wifi) {
+      console.log(wifi)
+      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.connected.ssid === wifi.ssid;
+    },
+// 判断是否为记忆中的网络
+    isWifiMemorized(wifi) {
+      console.log(wifi)
+      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.wifiList_memorized.some(m => m.ssid === wifi.ssid);
+    },
+// 判断是否为其他网络
+    isWifiOtherNetwork(wifi) {
+      console.log(wifi)
+      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && !this.isWifiConnected(wifi) && !this.isWifiMemorized(wifi); // 将 isConnected 改为 isWifiConnected
+    },
+
     /**
      处理监听接收 GATT 通知
      */
@@ -937,7 +962,7 @@ export default {
                 console.error('reboot error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
                 this.init()
 
               }
@@ -950,7 +975,7 @@ export default {
                 console.error('restoreFactory error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
                 this.init()
 
               }
@@ -964,70 +989,22 @@ export default {
                 console.error('getWiFiList error message:', response.error.message)
                 return
               }
-              //{"jsonrpc":"2.0","id":201,"result":{"scanned":[{"ssid":"ELFLECT"},{"ssid":"611"},{"ssid":"gjlx"},{"ssid":"DIRECT-gH-EShare-2321"},{"ssid":"ChinaNet-sbga"},{"ssid":"longsailing"},{"ssid":"cxzx666"},{"ssid":"cxzx666"}],"connected":null,"memorized":[]}}
               this.wifiList_scanned = response.result.scanned !== null ? response.result.scanned : [];//已扫描到的设备列表
               this.wifiList_connected = response.result.connected !== null ? response.result.connected : [];//已连接的设备列表
               this.wifiList_memorized = response.result.memorized !== null ? response.result.memorized : [];//已记忆的设备列表
               this.wifiList = []
-              this.active_wifi_obj = null
-              this.active_wifi_type = null
+              this.active_wifi_obj = {
+                "ssid":''
+              }
+              this.active_wifi_type = 1
               this.selectedWifiIndex = -1
+              //把几个列表合并成一个列表
+              this.wifiList = [...this.wifiList_scanned, ...this.wifiList_connected, ...this.wifiList_memorized]
+              //根据ssid 去重
+              this.wifiList = this.wifiList.filter((item, index, self) => {
+                return self.findIndex(i => i.ssid === item.ssid) === index;
+              })
 
-
-              if (this.wifiList_connected !== null && this.wifiList_connected.length) {
-                //如果当前已经连接的wifiList_connected，不在扫描列表里面，删除
-                for (let i = 0; i < this.wifiList_connected.length; i++) {
-                  let index = this.wifiList_scanned.findIndex(item => item.ssid === this.wifiList_connected[i].ssid)
-                  if (index === -1) {
-                    this.wifiList_connected.splice(i, 1)
-                  }
-                }
-                for (let i = 0; i < this.wifiList_connected.length; i++) {
-                  let obj = {
-                    ssid: this.wifiList_connected[i].ssid,
-                    type: 1
-                  }
-                  this.wifiList.push(obj)
-                }
-              }
-
-              if (this.wifiList_scanned.length) {
-                for (let i = 0; i < this.wifiList_memorized.length; i++) {
-                  let obj = {
-                    ssid: this.wifiList_memorized[i].ssid,
-                    type: 2
-                  }
-                  this.wifiList.push(obj)
-                }
-              }
-              if (this.wifiList_scanned.length) {
-                for (let i = 0; i < this.wifiList_scanned.length; i++) {
-                  let obj = {
-                    ssid: this.wifiList_scanned[i].ssid,
-                    type: 3
-                  }
-                  this.wifiList.push(obj)
-                }
-              }
-              //wifiList 去重，根据ssid判断
-              let newArr = [];
-              for (let i = 0; i < this.wifiList.length; i++) {
-                let item = this.wifiList[i];
-                let isExist = false;
-                for (let j = 0; j < newArr.length; j++) {
-                  if (item.ssid === newArr[j].ssid) {
-                    isExist = true;
-                    break;
-                  }
-                }
-                if (!isExist) {
-                  newArr.push(item);
-                }
-              }
-              this.wifiList = newArr
-
-
-              console.log('所有wifi 列表', this.wifiList)
             }
             // 连接指定WiFi热点
             if (response.id === 202) {
@@ -1035,13 +1012,20 @@ export default {
 
               console.log('通知返回连接指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('connectWiFi error message:', response.error.message)
+                this.$message.error('connectWiFi error message:'+response.error.message )
                 console.error('connectWiFi error message:', response.error.message)
                 return
               }
               if (response.result) {
+                this.selectedWifiIndex=-1
+                this.active_wifi_obj={
+                  "ssid":''
+                }
+
                 this.fetchMemorizedWifiList().then(() => {
                   this.$message.success('connectWiFi success')
+                }).catch(err=>{
+                  console.error(err)
                 })
 
               }
@@ -1056,10 +1040,28 @@ export default {
                 console.error('forgetWiFi error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
+                this.selectedWifiIndex=-1
+                this.active_wifi_obj={
+                  "ssid":''
+                }
+                for (let i = 0; i <this.wifiList_memorized.length ; i++) {
+                  if (this.wifiList_memorized[i].ssid === this.active_wifi_obj.ssid){
+                    this.wifiList_memorized.splice(i,1)
+                  }
+                }
+                for (let i = 0; i <this.wifiList_connected.length ; i++) {
+                  if (this.wifiList_connected[i].ssid === this.active_wifi_obj.ssid){
+                    this.wifiList_connected.splice(i,1)
+                  }
+                }
                 this.fetchMemorizedWifiList().then(() => {
                   this.$message.success('forgetWiFi success')
+                }).catch(err=>{
+                  console.error(err)
                 })
+
+
 
               }
             }
@@ -1086,7 +1088,7 @@ export default {
                 console.error('setSaaS error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
                this.SaaSFormIsEditor=false
                 this.getSaaS().then(res => {
                   this.$message.success('setSaaS success')
@@ -1117,7 +1119,7 @@ export default {
                 console.error('setRecord error message:', response.error.message)
                 return
               }
-              if (response.result&&response.result===0) {
+              if (response.result===0) {
                 this.recordingFormIsEditor=false
                 this.getRecord().then(res => {
                   this.$message.success('setRecord success')
@@ -1148,7 +1150,7 @@ export default {
                 console.error('setUStorage error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
                 this.USBFormIsEditor=false
                 this.getUStorage().then(res => {
                   this.$message.success('setUStorage success')
@@ -1272,13 +1274,19 @@ export default {
         return true; // 假设其他支持的浏览器无需版本检查
       }
     },
-    selectWifi(item, type, index) {
-      // 选择wifi
-      this.active_wifi_obj = item
-      this.active_wifi_type = type
-      this.selectedWifiIndex = index
-      this.wifi_pwd = ''
-      console.log(this.active_wifi_obj, this.active_wifi_type)
+    selectWifi(item, index) {
+      // console.log(this.active_wifi_obj.ssid !==this.wifiList_connected.ssid)
+      // console.log(this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid))
+
+
+      if (item && item.ssid) {
+        this.selectedWifiIndex = index;
+        this.active_wifi_obj = item;
+        this.wifi_pwd = ''
+      }
+      console.log(this.active_wifi_obj, this.selectedWifiIndex)
+
+
 
     },
 
@@ -1347,10 +1355,11 @@ export default {
 
         // 检查是否已经确认重启设备
         if (this.rebootConfirmed) {
+          console.log('设备会重启');
             this.rebootDevice();  // 用户确认离开后，重启设备
         } else {
-          this.rebootDevice();  // 用户确认离开后，重启设备
-            console.log('设备会重启');
+          // this.rebootDevice();  // 用户取消离开后，不重启设备
+            console.log('设备不会重启');
         }
     },
     handleUnload() {
