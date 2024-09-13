@@ -330,7 +330,7 @@ export default {
       // this.SaaSFormIsEditor = false;
       if (type === 'sass') {
         // TODO: sass校验数据
-        if (!this.SaaSForm.ip) {
+        if (!this.SaaSForm.ipAddress) {
           this.$message.error('IP address cannot be empty');
           return;
         }
@@ -340,7 +340,7 @@ export default {
         }
         //校验ip地址
         let reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-        if (!reg.test(this.SaaSForm.ip)) {
+        if (!reg.test(this.SaaSForm.ipAddress)) {
           this.$message.error('IP address format error');
           return;
         }
@@ -352,7 +352,7 @@ export default {
           return;
         }
 
-        this.setSaaS(this.SaaSForm.ip, this.SaaSForm.port).then(res => {
+        this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
         })
       }
       if (type === 'recording') {
@@ -526,7 +526,8 @@ export default {
 
       } catch (error) {
         console.error('Error requesting Bluetooth device:', error);
-        console.error('连接设备失败:', error);
+        // console.error('连接设备失败:', error);
+       this.$message.error(error)
         this.isConnected = false; // 确保连接失败时标记为未连接状态
           localStorage.removeItem('isConnected');
       }
@@ -587,7 +588,7 @@ export default {
       return new Promise((resolve, reject) => {
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
           .then(() => {
-            console.log('Command send success', data);
+            // console.log('Command send success', data);
             this.$message.success('Command send success')
             loading.close()
             resolve();
@@ -631,7 +632,7 @@ export default {
         // JSON-RPC命令
         const command = {
           jsonrpc: "2.0",
-          id: 201, // 命令ID，用于匹配请求和响应
+          id: 210, // 命令ID，用于匹配请求和响应
           method: "getDevice", // 调用的方法名
           params: null // 此命令不需要参数
         };
@@ -863,11 +864,11 @@ export default {
     async startNotifications() {
       return new Promise((resolve, reject) => {
         var characteristicReadChannel = this.deviceOption.characteristicReadChannel;
-        console.log('Starting Notifications...');
+        // console.log('Starting Notifications...');
         //// 启动特征的通知功能
         characteristicReadChannel.startNotifications()
           .then(() => {
-            console.log('Notifications started');
+            // console.log('Notifications started');
             // 添加监听事件，当特征值改变时触发
             characteristicReadChannel.addEventListener('characteristicvaluechanged', this.handleCharacteristicvaluechanged);
             resolve();
@@ -884,27 +885,27 @@ export default {
      */
     handleCharacteristicvaluechanged(event) {
       var value = event.target.value;
-      console.log('返回的通知源value -->');
-      console.log(value);
+      // console.log('返回的通知源value -->');
+      // console.log(value);
       // 创建 TextDecoder 实例并指定 UTF-8 编码
       var decoder = new TextDecoder('utf-8', {fatal: true});
       try {
         var text = decoder.decode(value);
-        console.log('返回的通知指令decode -->', text);
-        console.log('返回的通知指令类型 -->', typeof text);
+        // console.log('返回的通知指令decode -->', text);
+        // console.log('返回的通知指令类型 -->', typeof text);
         // 清理字符串中的空白字符和其他可能的干扰字符
         // text = JSON.stringify(text)
         // 检查 text 是否为 JSON
         if (this.isJson(text)) {
           try {
-            console.log('JSON.parse前:');
-            console.log(text);
+            // console.log('JSON.parse前:');
+            // console.log(text);
             const response = JSON.parse(text); // 解析 JSON
-            console.log('JSON.parse后:');
-            console.log(response);
+            // console.log('JSON.parse后:');
+            // console.log(response);
             //重启设备
             if (response.id === 100) {
-              console.log('通知返回重启设备response', response)
+              // console.log('通知返回重启设备response', response)
               if (response.error) {
                 this.$message.error('reboot error message:', response.error.message)
                 console.error('reboot error message:', response.error.message)
@@ -1060,6 +1061,7 @@ export default {
                 return
               }
               if (response.result) {
+               this.SaaSFormIsEditor=false
                 this.getSaaS().then(res => {
                   this.$message.success('setSaaS success')
                 })
@@ -1089,7 +1091,8 @@ export default {
                 console.error('setRecord error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result&&response.result===0) {
+                this.recordingFormIsEditor=false
                 this.getRecord().then(res => {
                   this.$message.success('setRecord success')
                 })
@@ -1120,6 +1123,7 @@ export default {
                 return
               }
               if (response.result) {
+                this.USBFormIsEditor=false
                 this.getUStorage().then(res => {
                   this.$message.success('setUStorage success')
                 })
@@ -1141,39 +1145,33 @@ export default {
             }
 
             event.target.removeEventListener('characteristicvaluechanged', new function () {
-              console.log('移除监听');
+              //console.log('移除监听');
             });
-            console.log('通知返回数据处理完成');
+            // console.log('通知返回数据处理完成');
 
 
           } catch (error) {
             console.error('解析 JSON 失败:', error);
-            console.error('text 不是有效的 JSON 格式');
+            // console.error('text 不是有效的 JSON 格式');
           }
         } else {
           console.error('text 不是有效的 JSON 格式');
         }
       } catch (error) {
-        console.error('解码失败:', error);
+        // console.error('解码失败:', error);
         console.error('数据不是有效的 UTF-8 编码');
         return;
       }
 
 
     },
-    // 清理字符串中的空白字符和其他可能的干扰字符
-
-
-
-
-
 
     isJson(text) {
       if (typeof text !== 'string') {
-        console.error('text 不是string');
+        // console.error('text 不是string');
         text.toString()
-        console.log('转换string');
-        console.log(text);
+        // console.log('转换string');
+        // console.log(text);
       }
       try {
         JSON.parse(text);
@@ -1326,6 +1324,7 @@ export default {
             this.rebootDevice();  // 用户确认离开后，重启设备
         } else {
             // 如果用户选择不离开，不做任何处理
+          this.rebootDevice();  // 用户确认离开后，重启设备
             console.log('用户取消了操作，设备不会重启');
         }
     },
