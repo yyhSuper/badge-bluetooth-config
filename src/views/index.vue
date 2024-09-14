@@ -333,7 +333,8 @@ export default {
       USBFormIsEditor: false,//U盘解锁是否为编辑状态
       USBForm: {//U盘解锁
         unlocked: false,//U盘解锁
-      }
+      },
+      isInit: false,//是否初始化
 
 
     }
@@ -663,6 +664,7 @@ export default {
         }
 
         this.isOperationInProgress = true;
+        this.isInit=true;
 
         // 读设备信息
         await this.getDevice();
@@ -801,7 +803,10 @@ export default {
               this.wifiList = this.wifiList.filter((item, index, self) => {
                 return self.findIndex(i => i.ssid === item.ssid) === index;
               })
-              this.getSaaS()
+
+              if (this.isInit){
+                this.getSaaS()
+              }
 
             }
             // 连接指定WiFi热点
@@ -879,7 +884,10 @@ export default {
               if (response.result) {
                 this.SaaSForm = response.result
                 this.SaaSFormIsEditor = false
-                this.getRecord()
+
+                if (this.isInit){
+                  this.getRecord()
+                }
 
               }
             }
@@ -911,7 +919,10 @@ export default {
               if (response.result) {
                 this.recordingForm = response.result
                 this.recordingFormIsEditor = false
-                this.getUStorage()
+
+                if (this.isInit){
+                  this.getUStorage()
+                }
 
               }
             }
@@ -943,6 +954,7 @@ export default {
               if (response.result) {
                 this.USBForm = response.result
                 this.USBFormIsEditor = false
+                this.isInit=false
 
               }
             }
@@ -971,7 +983,10 @@ export default {
               }
               if (response.result) {
                 this.deviceInfo = response.result
-                this.fetchMemorizedWifiList()
+                if (this.isInit){
+                  this.fetchMemorizedWifiList()
+                }
+
                 // console.log('deviceInfo', this.deviceInfo)
 
               }
