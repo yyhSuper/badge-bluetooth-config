@@ -297,11 +297,16 @@ export default {
   },
   computed: {
     showForm() {
+      // 检查当前选择的 WiFi 是否在记忆列表中
+      const isCurrentSsidInMemorized = this.wifiList_memorized.some(m => m.ssid === this.active_wifi_obj.ssid);
+
+      // 结合所有条件
       return (
           this.active_wifi_obj.ssid !== '' &&
           this.selectedWifiIndex !== -1 &&
           this.active_wifi_obj.ssid !== this.wifiList_connected.ssid &&
-          (!this.wifiList_memorized.length || this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid))
+          (!this.wifiList_memorized.length || this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid)) &&
+          !isCurrentSsidInMemorized
       );
     }
   },
@@ -403,12 +408,23 @@ export default {
 
     },
     restoreFactorySettings() {
-      // 恢复出厂设置
-      this.restoreFactory().then(res => {
+      this.$confirm('Are you sure you want to restore the factory settings?', 'Restore Factory Settings', {
+        confirmButtonText: 'Restore',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        // 用户点击确定按钮，执行恢复出厂设置操作
+        // 恢复出厂设置
+        this.restoreFactory().then(res => {
 
-      }).catch(err => {
-        this.$message.error(err);
-      })
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      }).catch(() => {
+        // 用户点击取消按钮，取消恢复出厂设置操作
+        this.$message.info('Restore factory settings canceled');
+      });
+
     },
     async init() {
       //初始化
@@ -1025,7 +1041,7 @@ export default {
               this.active_wifi_type = 1
               this.selectedWifiIndex = -1
               //把几个列表合并成一个列表
-              this.wifiList = [...this.wifiList_scanned, ...this.wifiList_connected, ...this.wifiList_memorized]
+              this.wifiList = [ ...this.wifiList_connected, ...this.wifiList_memorized,...this.wifiList_scanned]
               //根据ssid 去重
               this.wifiList = this.wifiList.filter((item, index, self) => {
                 return self.findIndex(i => i.ssid === item.ssid) === index;
@@ -1301,8 +1317,6 @@ export default {
       }
     },
     selectWifi(item, index) {
-      // console.log(this.active_wifi_obj.ssid !==this.wifiList_connected.ssid)
-      // console.log(this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid))
 
 
       if (item && item.ssid) {
