@@ -10,7 +10,7 @@
       <div class="nav">
         <div class="logo-wrap">
           <img src="../assets/img/logo.png" alt="" class="logo">
-          <h1>Badge Settings</h1>
+          <h1 class="logo">Badge Settings</h1>
         </div>
 
         <div class="header-button-wrap">
@@ -1729,8 +1729,14 @@ export default {
   align-items: center;
   flex-direction: row;
 }
-
+h1.logo {
+  font-size: 16px;
+}
 @media (max-width: 768px) {
+  h1.logo {
+    font-size: 10px;
+    white-space: nowrap;
+  }
   /* 移动端样式 */
   .el-form-item__label {
     font-size: 12px;
@@ -1749,9 +1755,7 @@ export default {
 
       }
 
-      h1 {
-        font-size: 12px;
-      }
+
     }
   }
 
