@@ -10,7 +10,7 @@
       <div class="nav">
         <div class="logo-wrap">
           <img src="../assets/img/logo.png" alt="" class="logo">
-          <h1 class="logo">Badge Settings</h1>
+          <h1 class="logo_title"><span>Badge Settings</span></h1>
         </div>
 
         <div class="header-button-wrap">
@@ -1731,11 +1731,15 @@ export default {
   align-items: center;
   flex-direction: row;
 }
-h1.logo {
+h1.logo_title {
   font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 @media (max-width: 768px) {
-  h1.logo {
+  h1.logo_title {
     font-size: 10px;
     white-space: nowrap;
   }
