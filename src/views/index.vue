@@ -454,7 +454,7 @@ export default {
     },
     async init() {
       //初始化
-      console.log(!this.isWritingCount)
+      // console.log(!this.isWritingCount)
       // 读设备信息
       await this.getDevice().then(async() => {
         if (!this.isWritingCount){
@@ -549,7 +549,7 @@ export default {
         }
       } catch (error) {
         console.error('Argh! ' + error);
-        this.$message.error(error);
+        // this.$message.error(error);
 
       }
     },
@@ -661,15 +661,15 @@ export default {
         */
     async getServcie() {
       // console.log('获取蓝牙Servcie服务')
-      console.log('Connecting to GATT Server...');
+      // console.log('Connecting to GATT Server...');
       const server = await this.device.gatt.connect();
       this.deviceOption.connect = await this.device.gatt.connected;
-      console.log('Getting Service...');
+      // console.log('Getting Service...');
       this.service = await server.getPrimaryService(this.deviceOption.serviceId);
     },
     /* // 获取GATT服务*/
     async connectDeviceAndCacheCharacteristics() {
-      console.log('获取GATT服务')
+      // console.log('获取GATT服务')
       this.deviceOption.characteristicWriteChannel = await this.service.getCharacteristic(this.deviceOption.characteristicWriteChannelId);
       this.deviceOption.characteristicReadChannel = await this.service.getCharacteristic(this.deviceOption.characteristicReadChannelId);
     },
@@ -686,14 +686,14 @@ export default {
         this.isWritingCount++
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
           .then(() => {
-            console.log('Command send success', data);
-            this.$message.success('Command send success')
+            // console.log('Command send success', data);
+            // this.$message.success('Command send success')
 
             loading.close()
             resolve();
           })
           .catch(error => {
-            console.error('指令发送失败:', error);
+            // console.error('指令发送失败:', error);
             this.$message.error('指令发送失败:', error)
             loading.close()
             reject(error);
@@ -940,7 +940,7 @@ export default {
               }
               if (response.result) {
                 this.deviceInfo = response.result
-                console.log('deviceInfo', this.deviceInfo)
+                // console.log('deviceInfo', this.deviceInfo)
 
               }
             }
@@ -1271,17 +1271,17 @@ export default {
     },
 // 判断是否为已连接网络
     isWifiConnected(wifi) {
-      console.log(wifi)
+      // console.log(wifi)
       // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.connected.ssid === wifi.ssid;
     },
 // 判断是否为记忆中的网络
     isWifiMemorized(wifi) {
-      console.log(wifi)
+      // console.log(wifi)
       // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.wifiList_memorized.some(m => m.ssid === wifi.ssid);
     },
 // 判断是否为其他网络
     isWifiOtherNetwork(wifi) {
-      console.log(wifi)
+      // console.log(wifi)
       // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && !this.isWifiConnected(wifi) && !this.isWifiMemorized(wifi); // 将 isConnected 改为 isWifiConnected
     },
 
@@ -1379,7 +1379,7 @@ export default {
         this.active_wifi_obj = item;
         this.wifi_pwd = ''
       }
-      console.log(this.active_wifi_obj, this.selectedWifiIndex)
+      // console.log(this.active_wifi_obj, this.selectedWifiIndex)
 
 
 
