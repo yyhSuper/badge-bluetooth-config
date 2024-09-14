@@ -6,6 +6,23 @@ const path = require('path')
 console.log('Static folder path:', path.resolve(__dirname, '../static'));
 
 module.exports = {
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+      config.optimization = {
+        minimize: true,
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                drop_console: true, // 移除所有的 console 语句
+                drop_debugger: true, // 移除所有的 debugger 语句
+              },
+            },
+          }),
+        ],
+      };
+    }
+  },
   publicPath: './',
   dev: {
 
