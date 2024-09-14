@@ -1720,7 +1720,7 @@ export default {
       height: 100%;
 
       .logo {
-        width: 80px;
+        width: 60px;
         height: auto;
 
       }
