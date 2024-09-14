@@ -108,13 +108,13 @@
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <el-form :label-width="isMobile?'100px':'220px'" label-position="left">
-            <el-form-item label="IP Address：">
+          <el-form :label-width="isMobile?'100px':'220px'" label-position="left" ref="SaaSForm" :rules="SaaSFormRules" :model="SaaSForm">
+            <el-form-item label="IP Address：" prop="ipAddress">
               <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ipAddress"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
-            <el-form-item label="Port：">
-              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number"
+            <el-form-item label="Port：" prop="port">
+              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number" @input="value => SaaSForm.port = Number(value)"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
           </el-form>
@@ -133,12 +133,13 @@
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
-            <el-form-item label="Maximum duration (seconds)：">
-              <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number"
+          <el-form ref="recordingForm" :label-width="isMobile?'180px':'220px'" label-position="left" :rules="recordingFormRules" :model="recordingForm">
+
+            <el-form-item label="Maximum duration (seconds)：" prop="maxRecordDuration">
+              <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number" @input="value => recordingForm.maxRecordDuration = Number(value)"
                         :disabled="!recordingFormIsEditor"></el-input>
             </el-form-item>
-            <el-form-item label="Automatically start work：">
+            <el-form-item label="Automatically start work：" prop="autoOnDutyWhenPowerOn">
               <el-switch
                 v-model="recordingForm.autoOnDutyWhenPowerOn"
                 :disabled="!recordingFormIsEditor"
@@ -146,7 +147,7 @@
                 inactive-color="#eee">
               </el-switch>
             </el-form-item>
-            <el-form-item label="automatically leave work：">
+            <el-form-item label="automatically leave work：" prop="autoOffDutyWhenPowerDown">
               <el-switch
                 v-model="recordingForm.autoOffDutyWhenPowerDown"
                 :disabled="!recordingFormIsEditor"
@@ -170,7 +171,7 @@
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <el-form :label-width="isMobile?'260px':'220px'" label-position="left">
+          <el-form :label-width="isMobile?'180px':'220px'" label-position="left">
             <el-form-item label="USB Unlock：">
               <el-switch
                 v-model="USBForm.unlocked"
@@ -230,6 +231,29 @@ import BluetoothDeviceManager from '../api/bluetoothCommands'; // 引入蓝牙�
 export default {
   name: 'index',
   data() {
+    //检验录音表单验证规则
+    let checkMaxRecordDuration = (rule, value, callback) => {
+      if (value === null || value === undefined || value === '') {
+        return callback(new Error('Please enter the maximum recording duration'));
+      } else if (value < 1 ) {
+        //大于0
+        return callback(new Error('The maximum recording duration must be greater than 0'));
+      } else {
+        callback();
+      }
+    };
+    //检验sass表单规则
+    let checkSass = (rule, value, callback) => {
+      if (value === null || value === undefined || value === '') {
+        return callback(new Error('Please enter the SASS'));
+      } else if (value < 1 ) {
+        //大于0
+        return callback(new Error('The SASS must be greater than 0'));
+      } else {
+        callback();
+      }
+    };
+
     return {
       isMobile: false,//是否为移动端
       isShowLog: false,//是否显示日志
@@ -282,11 +306,26 @@ export default {
         ip: null,//IP地址
         port: null,//端口
       },
+      SaaSFormRules:{
+        // SaaS平台校验规则
+        ipAddress: [
+          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
+          { type: 'string', pattern: /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/, message: 'Please enter the correct IP address', trigger: 'blur' }
+        ],
+        port: [
+          { validator: checkSass, trigger: 'blur' }
+        ]
+      },
       recordingFormIsEditor: false,//录音是否为编辑状态
       recordingForm: {//录音
-        maxRecordDuration: null,//最大时长
+        maxRecordDuration: '',//最大时长
         autoOnDutyWhenPowerOn: false,//开机自动上班
         autoOffDutyWhenPowerDown: false,//关机自动下班
+      },
+      recordingFormRules:{//录音校验规则
+        maxRecordDuration: [
+          { validator: checkMaxRecordDuration, trigger: 'blur' }
+        ]
       },
       USBFormIsEditor: false,//U盘解锁是否为编辑状态
       USBForm: {//U盘解锁
@@ -342,56 +381,37 @@ export default {
       // TODO: 保存数据
       // this.SaaSFormIsEditor = false;
       if (type === 'sass') {
-        // TODO: sass校验数据
-        if (!this.SaaSForm.ipAddress) {
-          this.$message.error('IP address cannot be empty');
-          return;
-        }
-        if (!this.SaaSForm.port) {
-          this.$message.error('Port cannot be empty');
-          return;
-        }
-        //校验ip地址
-        let reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-        if (!reg.test(this.SaaSForm.ipAddress)) {
-          this.$message.error('IP address format error');
-          return;
-        }
-        //端口转为整数类型
-        this.SaaSForm.port = parseInt(this.SaaSForm.port);
-        // TODO: 校验端口
-        if (this.SaaSForm.port <= 0 || this.SaaSForm.port > 65535) {
-          this.$message.error('Port range is 1-65535');
-          return;
-        }
+        this.$refs.SaaSForm.validate((valid) => {
 
-        this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
-        })
+          if (valid) {
+            // TODO: 校验录音数据
+            this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
+            })
+          } else {
+            console.log('error submit!!');
+
+            return false;
+          }
+        });
+
+
+
       }
       if (type === 'recording') {
+        this.$refs.recordingForm.validate((valid) => {
 
-        // TODO: 校验录音数据
-        if (!this.recordingForm.maxRecordDuration) {
-          this.$message.error('Max recording duration cannot be empty');
+          if (valid) {
+            // TODO: 校验录音数据
+            this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
+            })
+          } else {
+            console.log('error submit!!');
 
-          return;
-        }
-        //转整为整数
-        this.recordingForm.maxRecordDuration = parseInt(this.recordingForm.maxRecordDuration);
-        //TODO 校验录音时长并转为整数类型
-        if (isNaN(this.recordingForm.maxRecordDuration)) {
-          this.$message.error('Max recording duration must be a number');
-          return;
-        }
-        //需要为正整数
-        if (this.recordingForm.maxRecordDuration <= 0) {
-          this.$message.error('Max recording duration must be greater than 0');
-          return;
-        }
+            return false;
+          }
+        });
 
 
-        this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
-        })
       }
       if (type === 'usb') {
         // TODO: U盘解锁
