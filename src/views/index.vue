@@ -314,6 +314,7 @@ export default {
           { type: 'string', pattern: /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/, message: 'Please enter the correct IP address', trigger: 'blur' }
         ],
         port: [
+          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
           { validator: checkSass, trigger: 'blur' }
         ]
       },
@@ -325,6 +326,7 @@ export default {
       },
       recordingFormRules:{//录音校验规则
         maxRecordDuration: [
+          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
           { validator: checkMaxRecordDuration, trigger: 'blur' }
         ]
       },
@@ -640,8 +642,8 @@ export default {
       }
       this.SaaSFormIsEditor=false
       this.SaaSForm={
-        ip: null,//IP地址
-        port: null,//端口
+        ip: '',//IP地址
+        port: '',//端口
       }
       this.recordingFormIsEditor=false
       this.recordingForm={
