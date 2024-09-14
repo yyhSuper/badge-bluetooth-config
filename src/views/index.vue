@@ -269,6 +269,7 @@ export default {
         connect: false//标记是否已连接
       },
       isWritingCount:0 ,//是否正在写入数据
+      isOperationInProgress:false ,//是否正在写入数据
       device: null,//蓝牙设备对象
       service: null,//蓝牙GATT服务器对象
       characteristic: null,//蓝牙特征对象
@@ -453,44 +454,43 @@ export default {
 
     },
     async init() {
-      //初始化
-      // console.log(!this.isWritingCount)
-      // 读设备信息
-      await this.getDevice().then(async() => {
-        if (!this.isWritingCount){
-
-          // 读取WiFi热点列表
-          if (!this.isWritingCount){
-            await this.fetchMemorizedWifiList().then(async () => {
-              if (!this.isWritingCount){
-                // 读SasS平台配置
-                await this.getSaaS().then(async () => {
-                  if (!this.isWritingCount){
-                    // 读录音配置
-                    await  this.getRecord().then(async () => {
-                      if (!this.isWritingCount){
-                        // 读U盘配置
-                        await  this.getUStorage().then( async () => {
-
-                        })
-                      }
-
-                    })
-                  }
-
-                })
-              }
-
-
-          });
-          }
-
+      // 初始化
+      try {
+        if (this.isOperationInProgress) {
+          console.log('Another operation is already in progress.');
+          return;
         }
-       /*
 
-       */
+        this.isOperationInProgress = true;
 
-      })
+        // 读设备信息
+        await this.getDevice();
+
+        if (!this.isWritingCount) {
+          // 读取WiFi热点列表
+          await this.fetchMemorizedWifiList();
+
+          if (!this.isWritingCount) {
+            // 读SasS平台配置
+            await this.getSaaS();
+
+            if (!this.isWritingCount) {
+              // 读录音配置
+              await this.getRecord();
+
+              if (!this.isWritingCount) {
+                // 读U盘配置
+                await this.getUStorage();
+              }
+            }
+          }
+        }
+
+        this.isOperationInProgress = false;
+      } catch (error) {
+        console.error('Error during initialization:', error);
+        this.isOperationInProgress = false;
+      }
     },
     logSomething() {
       console.log('这是一个测试日志');
@@ -587,7 +587,7 @@ export default {
          // localStorage.setItem('isConnected', 'true');
 
 
-        console.log('已连接到设备:', JSON.stringify(device));
+        // console.log('已连接到设备:', JSON.stringify(device));
         // 开始监听设备的通知（如果需要）
         //this.startNotifications();
         this.device.addEventListener('gattserverdisconnected', this.handleDisconnected.bind(this));
