@@ -13,5 +13,21 @@
 <!-- built files will be auto injected -->
 <div id="app"></div>
 </body>
+html, body {
+touch-action: manipulation;
+-ms-touch-action: manipulation;
+}
+<script>
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
 
+    document.addEventListener('gesturechange', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', function (e) {
+        e.preventDefault();
+    });
+</script>
 </html>

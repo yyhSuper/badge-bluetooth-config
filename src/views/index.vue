@@ -257,7 +257,7 @@ export default {
     return {
       isMobile: false,//是否为移动端
       isShowLog: false,//是否显示日志
-      isShowLogButton: true,//是否显示日志按钮
+      isShowLogButton: false,//是否显示日志按钮
       isConnected: false,//标记是否已连接设备
       deviceOption: {
         deviceNamePrefix: {namePrefix: 'BSF'},//蓝牙设备前缀
