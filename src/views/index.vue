@@ -967,7 +967,7 @@ export default {
 
     },
    async handleRestart(){
-      this.$confirm('There may be unsaved projects. Are you sure you want to restart?？', 'tips', {
+      this.$confirm('Are you sure you want to restart?？', 'tips', {
         confirmButtonText: 'Sure',
         cancelButtonText: 'Cancel',
         type: 'warning'
