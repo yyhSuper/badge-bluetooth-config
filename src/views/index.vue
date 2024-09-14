@@ -684,13 +684,13 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
+      this.isOperationInProgress = true;
       return new Promise((resolve, reject) => {
         this.isWritingCount++
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
           .then(() => {
             // console.log('Command send success', data);
             // this.$message.success('Command send success')
-
             loading.close()
             resolve();
           })
@@ -718,11 +718,13 @@ export default {
         // 清理字符串中的空白字符和其他可能的干扰字符
         // text = JSON.stringify(text)
         // 检查 text 是否为 JSON
+
         if (this.isJson(text)) {
           try {
             // console.log('JSON.parse前:');
             // console.log(text);
             const response = JSON.parse(text); // 解析 JSON
+            this.isOperationInProgress = false;
             this.isWritingCount--
             // console.log('JSON.parse后:');
             // console.log(response);
