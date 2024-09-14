@@ -1311,7 +1311,7 @@ export default {
       // 检查操作系统和版本信息
       if (!isBluetoothSupported) {
         console.log("当前浏览器不支持 Web Bluetooth API");
-        this.$message.error("当前浏览器不支持 Web Bluetooth API")
+        this.$message.error("The current browser does not support the Web Bluetooth API")
         return false;
       }
 
@@ -1338,10 +1338,13 @@ export default {
           return true;
         } else {
           console.log(`Edge 浏览器版本 ${edgeVersion} 不支持 Web Bluetooth API，最低要求版本为 ${minEdgeVersion}`);
+          this.$message.error("Edge browser version ${edgeVersion} does not support Web Bluetooth API, the minimum required version is ${minEdgeVersion}")
           return false;
         }
       } else if (isIOS) {
         console.log("iOS Chrome 不支持 Web Bluetooth API");
+        this.$message.error("iOS Chrome does not support Web Bluetooth API")
+
         return false;
       } else {
         console.log("其他支持 Web Bluetooth API 的浏览器");
