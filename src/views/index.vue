@@ -58,7 +58,7 @@
                 <div class="list-item-body-item" :class="{ active: index === selectedWifiIndex }"
                      v-for="(wifi,index) in wifiList" :key="wifi.ssid" @click="selectWifi(wifi,index)">
                   <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span
-                    class="wifi-name">{{ wifi.ssid }}</span></div>
+                      class="wifi-name">{{ wifi.ssid }}</span></div>
                   <div class="list-item-button-wrap" v-if="wifiList_connected!==null&&wifi.ssid===wifiList_connected.ssid">
                     <el-icon class="el-icon-success icon"/>
                   </div>
@@ -141,18 +141,18 @@
             </el-form-item>
             <el-form-item label="Automatically start work：" prop="autoOnDutyWhenPowerOn">
               <el-switch
-                v-model="recordingForm.autoOnDutyWhenPowerOn"
-                :disabled="!recordingFormIsEditor"
-                active-color="#13ce66"
-                inactive-color="#eee">
+                  v-model="recordingForm.autoOnDutyWhenPowerOn"
+                  :disabled="!recordingFormIsEditor"
+                  active-color="#13ce66"
+                  inactive-color="#eee">
               </el-switch>
             </el-form-item>
             <el-form-item label="automatically leave work：" prop="autoOffDutyWhenPowerDown">
               <el-switch
-                v-model="recordingForm.autoOffDutyWhenPowerDown"
-                :disabled="!recordingFormIsEditor"
-                active-color="#13ce66"
-                inactive-color="#eee">
+                  v-model="recordingForm.autoOffDutyWhenPowerDown"
+                  :disabled="!recordingFormIsEditor"
+                  active-color="#13ce66"
+                  inactive-color="#eee">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -174,10 +174,10 @@
           <el-form :label-width="isMobile?'180px':'220px'" label-position="left">
             <el-form-item label="USB Unlock：">
               <el-switch
-                v-model="USBForm.unlocked"
-                :disabled="!USBFormIsEditor"
-                active-color="#13ce66"
-                inactive-color="#eee">
+                  v-model="USBForm.unlocked"
+                  :disabled="!USBFormIsEditor"
+                  active-color="#13ce66"
+                  inactive-color="#eee">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -195,20 +195,20 @@
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <div class="warning-wrap">
-              <div class="warning-wrap-box">
-                  <div class="warning-wrap-title">Warning clause</div>
-                  <div class="warning-wrap-body">
-                      <p>1. Your modified settings will be restored to default settings</p>
-                      <p>2. Your machine needs to be reset before it can work properly</p>
-                      <p>3. Your firmware version remains unchanged and cannot be restored to the default firmware</p>
-                  </div>
+            <div class="warning-wrap-box">
+              <div class="warning-wrap-title">Warning clause</div>
+              <div class="warning-wrap-body">
+                <p>1. Your modified settings will be restored to default settings</p>
+                <p>2. Your machine needs to be reset before it can work properly</p>
+                <p>3. Your firmware version remains unchanged and cannot be restored to the default firmware</p>
               </div>
-              <div class="warning-wrap-button-wrap">
-                  <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read
-                      the warning and I want to restore
-                      the menu
-                  </el-button>
-              </div>
+            </div>
+            <div class="warning-wrap-button-wrap">
+              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read
+                the warning and I want to restore
+                the menu
+              </el-button>
+            </div>
 
 
           </div>
@@ -381,6 +381,7 @@ export default {
   },
   methods: {
     saveForm(type) {
+
       // TODO: 保存数据
       // this.SaaSFormIsEditor = false;
       if (type === 'sass') {
@@ -388,8 +389,14 @@ export default {
 
           if (valid) {
             // TODO: 校验录音数据
-            this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
-            })
+            var flag=false;
+            if(flag===false){
+              flag=true;
+              this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
+                flag=false
+              })
+            }
+
           } else {
             console.log('error submit!!');
 
@@ -405,8 +412,14 @@ export default {
 
           if (valid) {
             // TODO: 校验录音数据
-            this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
-            })
+
+            var flag=false;
+            if(flag===false){
+              flag=true;
+              this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
+                flag=false
+              })
+            }
           } else {
             console.log('error submit!!');
 
@@ -418,8 +431,14 @@ export default {
       }
       if (type === 'usb') {
         // TODO: U盘解锁
-        this.setUStorage(this.USBForm.unlocked).then(res => {
-        })
+        var flag=false;
+        if(flag===false){
+          flag=true;
+          this.setUStorage(this.USBForm.unlocked).then(res => {
+            flag=false
+          })
+        }
+
       }
 
     },
@@ -455,48 +474,8 @@ export default {
       });
 
     },
-    async init() {
-      // 初始化
-      try {
-        if (this.isOperationInProgress) {
-          console.log('Another operation is already in progress.');
-          return;
-        }
 
-        this.isOperationInProgress = true;
 
-        // 读设备信息
-        await this.getDevice();
-
-        if (!this.isWritingCount) {
-          // 读取WiFi热点列表
-          await this.fetchMemorizedWifiList();
-
-          if (!this.isWritingCount) {
-            // 读SasS平台配置
-            await this.getSaaS();
-
-            if (!this.isWritingCount) {
-              // 读录音配置
-              await this.getRecord();
-
-              if (!this.isWritingCount) {
-                // 读U盘配置
-                await this.getUStorage();
-              }
-            }
-          }
-        }
-
-        this.isOperationInProgress = false;
-      } catch (error) {
-        console.error('Error during initialization:', error);
-        this.isOperationInProgress = false;
-      }
-    },
-    logSomething() {
-      console.log('这是一个测试日志');
-    },
     setup() {
       // 保存原始的 console.log 方法
       let originalConsoleLog = console.log;
@@ -585,8 +564,8 @@ export default {
         this.characteristic = characteristic;
         this.deviceOption.connect = true;// 标记为已连接
         this.isConnected = true; // 更新连接状态
-          //保存连接状态到localStorage
-         // localStorage.setItem('isConnected', 'true');
+        //保存连接状态到localStorage
+        // localStorage.setItem('isConnected', 'true');
 
 
         // console.log('已连接到设备:', JSON.stringify(device));
@@ -598,9 +577,9 @@ export default {
       } catch (error) {
         console.error('Error requesting Bluetooth device:', error);
         // console.error('连接设备失败:', error);
-       this.$message.error('You have unpaired your Bluetooth device')
+        this.$message.error('You have unpaired your Bluetooth device')
         this.isConnected = false; // 确保连接失败时标记为未连接状态
-         // localStorage.removeItem('isConnected');
+        // localStorage.removeItem('isConnected');
       }
     },
     /*
@@ -611,7 +590,7 @@ export default {
       try {
         this.rest()
 
-         // localStorage.removeItem('isConnected');
+        // localStorage.removeItem('isConnected');
       } catch (error) {
         this.$message.error('Argh! ' + error)
 
@@ -656,7 +635,7 @@ export default {
         unlocked: false,//U盘解锁
       }
 
-        //localStorage.removeItem('isConnected');
+      //localStorage.removeItem('isConnected');
     },
     /*
         获取service服务
@@ -675,7 +654,45 @@ export default {
       this.deviceOption.characteristicWriteChannel = await this.service.getCharacteristic(this.deviceOption.characteristicWriteChannelId);
       this.deviceOption.characteristicReadChannel = await this.service.getCharacteristic(this.deviceOption.characteristicReadChannelId);
     },
+    async init() {
+      // 初始化
+      try {
+        if (this.isOperationInProgress) {
+          console.log('Another operation is already in progress.');
+          return;
+        }
 
+        this.isOperationInProgress = true;
+
+        // 读设备信息
+        await this.getDevice();
+
+        if (!this.isWritingCount) {
+          // 读取WiFi热点列表
+          await this.fetchMemorizedWifiList();
+
+          if (!this.isWritingCount) {
+            // 读SasS平台配置
+            await this.getSaaS();
+
+            if (!this.isWritingCount) {
+              // 读录音配置
+              await this.getRecord();
+
+              if (!this.isWritingCount) {
+                // 读U盘配置
+                await this.getUStorage();
+              }
+            }
+          }
+        }
+
+        this.isOperationInProgress = false;
+      } catch (error) {
+        console.error('Error during initialization:', error);
+        this.isOperationInProgress = false;
+      }
+    },
     // 写指令
     writeCommand(characteristic, data) {
       let loading = this.$loading({
@@ -688,18 +705,19 @@ export default {
       return new Promise((resolve, reject) => {
         this.isWritingCount++
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
-          .then(() => {
-            // console.log('Command send success', data);
-            // this.$message.success('Command send success')
-            loading.close()
-            resolve();
-          })
-          .catch(error => {
-            // console.error('指令发送失败:', error);
-            this.$message.error('指令发送失败:', error)
-            loading.close()
-            reject(error);
-          });
+            .then(() => {
+              // console.log('Command send success', data);
+              // this.$message.success('Command send success')
+              loading.close()
+              // console.log(data.method+'指令发送成功:');
+              resolve();
+            })
+            .catch(error => {
+              console.error(data.method+'指令发送失败:', error);
+              this.$message.error(data.method+'指令发送失败:', error)
+              loading.close()
+              reject(error);
+            });
       });
     },
     /**
@@ -726,6 +744,7 @@ export default {
             const response = JSON.parse(text); // 解析 JSON
             this.isOperationInProgress = false;
             this.isWritingCount--
+
             // console.log('JSON.parse后:');
             // console.log(response);
             //重启设备
@@ -738,7 +757,7 @@ export default {
               }
               if (response.result===0) {
                 //刷新一下当前页面
-               // localStorage.removeItem('isConnected')
+                // localStorage.removeItem('isConnected')
 
                 location.reload()
 
@@ -832,11 +851,15 @@ export default {
                     this.wifiList_connected.splice(i,1)
                   }
                 }
-                this.fetchMemorizedWifiList().then(() => {
-                  this.$message.success('forgetWiFi success')
-                }).catch(err=>{
-                  console.error(err)
-                })
+                //延迟一秒再刷新列表
+                setTimeout(() => {
+                  this.fetchMemorizedWifiList().then(() => {
+                    this.$message.success('forgetWiFi success')
+                  }).catch(err=>{
+                    console.error(err)
+                  })
+                }, 1000);
+
 
 
 
@@ -968,9 +991,8 @@ export default {
         return;
       }
 
-
     },
-   async handleRestart(){
+    async handleRestart(){
       this.$confirm('Are you sure you want to restart?？', 'tips', {
         confirmButtonText: 'Sure',
         cancelButtonText: 'Cancel',
@@ -978,14 +1000,14 @@ export default {
       }).then(async () => {
         // 确认重启设备
         await this.rebootDevice()
-          .then(() => {
+            .then(() => {
 
-          })
-          .catch(error => {
-            // 重启设备失败，处理错误
-            console.error('重启设备失败:', error);
-            this.$message.error('Restarting the device failed:', error)
-          });
+            })
+            .catch(error => {
+              // 重启设备失败，处理错误
+              console.error('重启设备失败:', error);
+              this.$message.error('Restarting the device failed:', error)
+            });
       }).catch(() => {
         // 取消重启设备
         this.$message({
@@ -1260,33 +1282,18 @@ export default {
         // console.log('Starting Notifications...');
         //// 启动特征的通知功能
         characteristicReadChannel.startNotifications()
-          .then(() => {
-            // console.log('Notifications started');
-            // 添加监听事件，当特征值改变时触发
-            characteristicReadChannel.addEventListener('characteristicvaluechanged', this.handleCharacteristicvaluechanged);
-            resolve();
-          })
-          .catch(error => {
-            console.error('Notifications Error:', error);
-            console.error('无法启动通知:', error);
-            reject(error);
-          });
+            .then(() => {
+              // console.log('Notifications started');
+              // 添加监听事件，当特征值改变时触发
+              characteristicReadChannel.addEventListener('characteristicvaluechanged', this.handleCharacteristicvaluechanged);
+              resolve();
+            })
+            .catch(error => {
+              console.error('Notifications Error:', error);
+              console.error('无法启动通知:', error);
+              reject(error);
+            });
       });
-    },
-// 判断是否为已连接网络
-    isWifiConnected(wifi) {
-      // console.log(wifi)
-      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.connected.ssid === wifi.ssid;
-    },
-// 判断是否为记忆中的网络
-    isWifiMemorized(wifi) {
-      // console.log(wifi)
-      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && this.wifiList_memorized.some(m => m.ssid === wifi.ssid);
-    },
-// 判断是否为其他网络
-    isWifiOtherNetwork(wifi) {
-      // console.log(wifi)
-      // return this.active_wifi_obj && this.active_wifi_obj.ssid === wifi.ssid && !this.isWifiConnected(wifi) && !this.isWifiMemorized(wifi); // 将 isConnected 改为 isWifiConnected
     },
 
 
@@ -1437,29 +1444,29 @@ export default {
     closeLog() {
       this.isShowLog = false;
     },
-      confirmReboot() {
-          // 弹出一个自定义对话框，用户确认后执行 rebootDevice()
-          if (confirm("是否确认关闭页面并重启设备？")) {
-              this.rebootConfirmed = true;  // 用户确认
+    confirmReboot() {
+      // 弹出一个自定义对话框，用户确认后执行 rebootDevice()
+      if (confirm("是否确认关闭页面并重启设备？")) {
+        this.rebootConfirmed = true;  // 用户确认
 
-              window.close(); // 关闭页面
-          } else {
-              this.rebootConfirmed = false;  // 用户取消
-          }
-      },
+        window.close(); // 关闭页面
+      } else {
+        this.rebootConfirmed = false;  // 用户取消
+      }
+    },
     handleBeforeUnload() {
-        // 显示默认的确认弹窗，用户可以选择是否离开
-        event.preventDefault();
-        event.returnValue = ''; // 根据浏览器要求，必须返回空字符串才能触发弹窗
+      // 显示默认的确认弹窗，用户可以选择是否离开
+      event.preventDefault();
+      event.returnValue = ''; // 根据浏览器要求，必须返回空字符串才能触发弹窗
 
-        // 检查是否已经确认重启设备
-        if (this.rebootConfirmed) {
-          console.log('设备会重启');
-            this.rebootDevice();  // 用户确认离开后，重启设备
-        } else {
-          // this.rebootDevice();  // 用户取消离开后，不重启设备
-            console.log('设备不会重启');
-        }
+      // 检查是否已经确认重启设备
+      if (this.rebootConfirmed) {
+        console.log('设备会重启');
+        this.rebootDevice();  // 用户确认离开后，重启设备
+      } else {
+        // this.rebootDevice();  // 用户取消离开后，不重启设备
+        console.log('设备不会重启');
+      }
     },
     handleUnload() {
       // 在页面已经被卸载时触发，可以在这里添加需要执行的逻辑
@@ -1697,34 +1704,34 @@ export default {
 }
 
 .warning-wrap {
-    .warning-wrap-box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: 1px solid #ddd;
-        padding: 20px 10px;
-        .warning-wrap-title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .warning-wrap-body {
-            p {
-                font-size: 14px;
-                line-height: 1.5;
-                margin-bottom: 10px;
-            }
-        }
-
-
+  .warning-wrap-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 20px 10px;
+    .warning-wrap-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
     }
-    .warning-wrap-button-wrap {
-        padding-top: 20px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+
+    .warning-wrap-body {
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
     }
+
+
+  }
+  .warning-wrap-button-wrap {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 .todo-wifi-button-wrap {
