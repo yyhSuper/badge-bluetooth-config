@@ -382,6 +382,11 @@ export default {
           this.$message.error('Max recording duration must be a number');
           return;
         }
+        //需要为正整数
+        if (this.recordingForm.maxRecordDuration <= 0) {
+          this.$message.error('Max recording duration must be greater than 0');
+          return;
+        }
 
 
         this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
@@ -550,7 +555,7 @@ export default {
       } catch (error) {
         console.error('Error requesting Bluetooth device:', error);
         // console.error('连接设备失败:', error);
-       this.$message.error(error)
+       this.$message.error('You have unpaired your Bluetooth device')
         this.isConnected = false; // 确保连接失败时标记为未连接状态
           localStorage.removeItem('isConnected');
       }
