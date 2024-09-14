@@ -1311,6 +1311,7 @@ export default {
       // 检查操作系统和版本信息
       if (!isBluetoothSupported) {
         console.log("当前浏览器不支持 Web Bluetooth API");
+        this.$message.error("当前浏览器不支持 Web Bluetooth API")
         return false;
       }
 
