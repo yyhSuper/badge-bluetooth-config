@@ -268,7 +268,7 @@ export default {
         characteristicReadChannel: null,//读取通道对象
         connect: false//标记是否已连接
       },
-      isWritingCount:0 ,//是否正在写入数据
+      isWritingCount:false ,//是否正在写入数据
       isOperationInProgress:false ,//是否正在写入数据
       device: null,//蓝牙设备对象
       service: null,//蓝牙GATT服务器对象
@@ -666,8 +666,9 @@ export default {
 
         // 读设备信息
         await this.getDevice();
+        console.log('isWritingCount：', !this.isWritingCount);
 
-        if (!this.isWritingCount) {
+        /*if (!this.isWritingCount) {
           // 读取WiFi热点列表
           await this.fetchMemorizedWifiList();
 
@@ -685,7 +686,7 @@ export default {
               }
             }
           }
-        }
+        }*/
 
         this.isOperationInProgress = false;
       } catch (error) {
@@ -703,7 +704,7 @@ export default {
       });
       this.isOperationInProgress = true;
       return new Promise((resolve, reject) => {
-        this.isWritingCount++
+        this.isWritingCount=true
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
             .then(() => {
               // console.log('Command send success', data);
@@ -743,7 +744,7 @@ export default {
             // console.log(text);
             const response = JSON.parse(text); // 解析 JSON
             this.isOperationInProgress = false;
-            this.isWritingCount--
+            this.isWritingCount=false
 
             // console.log('JSON.parse后:');
             // console.log(response);
@@ -800,6 +801,7 @@ export default {
               this.wifiList = this.wifiList.filter((item, index, self) => {
                 return self.findIndex(i => i.ssid === item.ssid) === index;
               })
+              this.getSaaS()
 
             }
             // 连接指定WiFi热点
@@ -877,6 +879,7 @@ export default {
               if (response.result) {
                 this.SaaSForm = response.result
                 this.SaaSFormIsEditor = false
+                this.getRecord()
 
               }
             }
@@ -908,6 +911,7 @@ export default {
               if (response.result) {
                 this.recordingForm = response.result
                 this.recordingFormIsEditor = false
+                this.getUStorage()
 
               }
             }
@@ -967,6 +971,7 @@ export default {
               }
               if (response.result) {
                 this.deviceInfo = response.result
+                this.fetchMemorizedWifiList()
                 // console.log('deviceInfo', this.deviceInfo)
 
               }
@@ -984,10 +989,12 @@ export default {
           }
         } else {
           console.error('text 不是有效的 JSON 格式');
+          this.isWritingCount=false
         }
       } catch (error) {
         // console.error('解码失败:', error);
         console.error('数据不是有效的 UTF-8 编码');
+        this.isWritingCount=false
         return;
       }
 
