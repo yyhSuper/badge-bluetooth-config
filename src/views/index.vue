@@ -15,7 +15,7 @@
 
         <div class="header-button-wrap">
           <el-button size="mini" type="primary" @click="connectToDevice" :disabled="isConnected">Connect</el-button>
-          <el-button size="mini" type="danger" @click="rebootDevice" :disabled="!isConnected">Restart</el-button>
+          <el-button size="mini" type="danger" @click="handleRestart" :disabled="!isConnected">Restart</el-button>
         </div>
 
       </div>
@@ -636,6 +636,30 @@ export default {
           });
       });
     },
+   async handleRestart(){
+      this.$confirm('There may be unsaved projects. Are you sure you want to restart?？', 'tips', {
+        confirmButtonText: 'Sure',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async () => {
+        // 确认重启设备
+        await this.rebootDevice()
+          .then(() => {
+
+          })
+          .catch(error => {
+            // 重启设备失败，处理错误
+            console.error('重启设备失败:', error);
+            this.$message.error('Restarting the device failed:', error)
+          });
+      }).catch(() => {
+        // 取消重启设备
+        this.$message({
+          type: 'info',
+          message: 'Cancelled'
+        });
+      });
+    },
 
     // 重启设备的命令
     async rebootDevice() {
@@ -963,7 +987,9 @@ export default {
                 return
               }
               if (response.result===0) {
-                this.init()
+                //刷新一下当前页面
+
+               location.reload()
 
               }
             }
@@ -1016,7 +1042,7 @@ export default {
                 console.error('connectWiFi error message:', response.error.message)
                 return
               }
-              if (response.result) {
+              if (response.result===0) {
                 this.selectedWifiIndex=-1
                 this.active_wifi_obj={
                   "ssid":''
