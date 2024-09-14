@@ -13,10 +13,12 @@
 <!-- built files will be auto injected -->
 <div id="app"></div>
 </body>
-html, body {
-touch-action: manipulation;
--ms-touch-action: manipulation;
-}
+<style>
+    html, body {
+        touch-action: manipulation;
+        -ms-touch-action: manipulation;
+    }
+</style>
 <script>
     document.addEventListener('gesturestart', function (e) {
         e.preventDefault();
