@@ -74,10 +74,10 @@
 
                   </el-form>
                   <div class="todo-wifi-button-wrap">
-                    <el-button v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1" size="mini" type="info" @click="cancelSelect">Cancel</el-button>
+                    <el-button v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1&&active_wifi_obj.ssid!==wifiList_connected.ssid" size="mini" type="info" @click="cancelSelect">Cancel</el-button>
                     <el-button v-if="showForm" size="mini" type="primary" :disabled="!isConnected"  @click="connectWifi">Connect</el-button>
                     <el-button
-                        v-if="!showForm&&selectedWifiIndex!==-1"
+                        v-if="showForget"
                         class="forget-button"
                         size="mini"
                         type="primary"
@@ -349,9 +349,17 @@ export default {
           this.active_wifi_obj.ssid !== '' &&
           this.selectedWifiIndex !== -1 &&
           this.active_wifi_obj.ssid !== this.wifiList_connected.ssid &&
-          (!this.wifiList_memorized.length || this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid)) &&
+          // (!this.wifiList_memorized.length || this.wifiList_memorized.some(m => m.ssid !== this.active_wifi_obj.ssid)) &&
           !isCurrentSsidInMemorized
       );
+    },
+    showForget() {
+      // 检查当前选择的 WiFi 是否在记忆列表中
+      const isCurrentSsidInMemorized = this.wifiList_memorized.some(m => m.ssid === this.active_wifi_obj.ssid);
+      return (
+          this.active_wifi_obj.ssid !== '' &&
+          this.selectedWifiIndex !== -1 && isCurrentSsidInMemorized
+      )
     }
   },
   // 监听语言变化
@@ -1021,15 +1029,17 @@ export default {
         type: 'warning'
       }).then(async () => {
         // 确认重启设备
-        await this.rebootDevice()
-            .then(() => {
 
-            })
-            .catch(error => {
-              // 重启设备失败，处理错误
-              console.error('重启设备失败:', error);
-              this.$message.error('Restarting the device failed:', error)
-            });
+        location.reload()
+            // await this.rebootDevice()
+            // .then(() => {
+            //
+            // })
+            // .catch(error => {
+            //   // 重启设备失败，处理错误
+            //   console.error('重启设备失败:', error);
+            //   this.$message.error('Restarting the device failed:', error)
+            // });
       }).catch(() => {
         // 取消重启设备
         this.$message({
