@@ -30,13 +30,13 @@
             <div class="list-item">
               <div class="list-item-body">
                 <div class="list-item-body-item noBorder">
-                  <div class="item-label">deviceSn：</div>
+                  <div class="item-label">Device SN：</div>
                   <div class="list-item-button-wrap">
                     <span>{{ deviceInfo.SN }}</span>
                   </div>
                 </div>
                 <div class="list-item-body-item noBorder">
-                  <div class="item-label">Firmware version：</div>
+                  <div class="item-label">Firmware Version：</div>
                   <div class="list-item-button-wrap">
                     <span>{{ deviceInfo.fwVersion }}</span>
                   </div>
@@ -49,7 +49,7 @@
         <!--        WIFI Network-->
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <div class="title-wrap"><span class="title">WIFI Network</span></div>
+            <div class="title-wrap"><span class="title">WiFi Network</span></div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <div class="list-list">
@@ -123,7 +123,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">Sound Recording</span>
+              <span class="title">Record</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="recordingFormIsEditor&&isConnected"
                       @click="saveForm('recording')"></span>
@@ -139,7 +139,7 @@
               <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number" @input="value => recordingForm.maxRecordDuration = Number(value)"
                         :disabled="!recordingFormIsEditor"></el-input>
             </el-form-item>
-            <el-form-item label="Automatically start work：" prop="autoOnDutyWhenPowerOn">
+            <el-form-item label="Start when power on：" prop="autoOnDutyWhenPowerOn">
               <el-switch
                   v-model="recordingForm.autoOnDutyWhenPowerOn"
                   :disabled="!recordingFormIsEditor"
@@ -147,7 +147,7 @@
                   inactive-color="#eee">
               </el-switch>
             </el-form-item>
-            <el-form-item label="automatically leave work：" prop="autoOffDutyWhenPowerDown">
+            <el-form-item label="Stop when power off：" prop="autoOffDutyWhenPowerDown">
               <el-switch
                   v-model="recordingForm.autoOffDutyWhenPowerDown"
                   :disabled="!recordingFormIsEditor"
@@ -161,7 +161,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">USB Unlock</span>
+              <span class="title">USB</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="USBFormIsEditor&&isConnected"
                       @click="saveForm('usb')"></span>
@@ -172,7 +172,7 @@
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <el-form :label-width="isMobile?'180px':'220px'" label-position="left">
-            <el-form-item label="USB Unlock：">
+            <el-form-item label="Unlock：">
               <el-switch
                   v-model="USBForm.unlocked"
                   :disabled="!USBFormIsEditor"
@@ -204,9 +204,7 @@
               </div>
             </div>
             <div class="warning-wrap-button-wrap">
-              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read
-                the warning and I want to restore
-                the menu
+              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read it
               </el-button>
             </div>
 
