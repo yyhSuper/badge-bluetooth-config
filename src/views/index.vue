@@ -550,8 +550,8 @@ export default {
       try {
         const config = {
           // filters: [] ,/*<- Prefer filters to save energy & show relevant devices.*/
-          filters: [this.deviceOption.deviceNamePrefix],
-          // acceptAllDevices: true,// 不设置 filters 以显示所有设备
+          //filters: [this.deviceOption.deviceNamePrefix],
+          acceptAllDevices: true,// 不设置 filters 以显示所有设备
           optionalServices: [this.deviceOption.serviceId]
         }
         const device = await navigator.bluetooth.requestDevice(config);
