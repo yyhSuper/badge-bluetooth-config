@@ -9,7 +9,8 @@
 
       <div class="nav">
         <div class="logo-wrap">
-          <img src="../assets/img/logo.png" alt="" class="logo">
+<!--          <img src="../assets/img/logo.png" alt="" >-->
+          <el-image  src="https://app-1317281863.cos.ap-guangzhou.myqcloud.com/test/rel/e10137213/logo.png"  class="logo" style="width: 100px;height: 50px;" fit="contain"></el-image>
           <h1 class="logo_title"><span>Badge Settings</span></h1>
         </div>
 
@@ -1914,6 +1915,7 @@ h1.logo_title {
 
     .warning-wrap-button-wrap {
       padding-top: 20px;
+        text-align: center;
 
     }
   }

@@ -6,6 +6,10 @@ const path = require('path')
 console.log('Static folder path:', path.resolve(__dirname, '../static'));
 
 module.exports = {
+  devServer: {
+    port: 9999,
+    host: '0.0.0.0'
+  },
   configureWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
       config.optimization = {
