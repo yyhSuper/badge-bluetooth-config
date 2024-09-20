@@ -1560,27 +1560,28 @@ export default {
   background: #fff;
   padding: 0 15px;
 
-  .logo-wrap {
-    display: flex;
-    height: 100%;
-    align-items: center;
-      //不换行
-      white-space: nowrap;
 
-    .logo {
-      display: inline-block;
-      width: auto;
-      height: 80%;
-      margin-right: 10px;
-    }
-  }
 
   .header-button-wrap {
     display: flex;
     flex-direction: row;
   }
 }
+.logo-wrap {
+    display: flex;
+    height: 100%;
+    align-items: center;
+//不换行
+    white-space: nowrap;
 
+
+}
+.logo {
+    display: inline-block;
+    width: auto;
+    height: 80%;
+    margin-right: 10px;
+}
 .main-wrap {
   width: 100%;
   padding-bottom: 60px;
@@ -1759,14 +1760,14 @@ export default {
 
 
   }
-  .warning-wrap-button-wrap {
+
+}
+.warning-wrap-button-wrap {
     padding-top: 20px;
     display: flex;
     flex-direction: row;
     justify-content: center;
-  }
 }
-
 .todo-wifi-button-wrap {
   display: flex;
   justify-content: center;
