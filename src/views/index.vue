@@ -9,8 +9,9 @@
 
       <div class="nav">
         <div class="logo-wrap">
-<!--          <img src="../assets/img/logo.png" alt="" >-->
-          <el-image  src="https://app-1317281863.cos.ap-guangzhou.myqcloud.com/test/rel/e10137213/logo.png"  class="logo" style="width: 100px;height: 50px;" fit="contain"></el-image>
+          <!--          <img src="../assets/img/logo.png" alt="" >-->
+          <el-image src="https://app-1317281863.cos.ap-guangzhou.myqcloud.com/test/rel/e10137213/logo.png" class="logo"
+                    style="width: 100px;height: 50px;" fit="contain"></el-image>
           <h1 class="logo_title"><span>Badge Settings</span></h1>
         </div>
 
@@ -60,7 +61,8 @@
                      v-for="(wifi,index) in wifiList" :key="wifi.ssid" @click="selectWifi(wifi,index)">
                   <div class="item-label"><span class="iconfont icon-wifi wifi-icon icon"></span><span
                       class="wifi-name">{{ wifi.ssid }}</span></div>
-                  <div class="list-item-button-wrap" v-if="wifiList_connected!==null&&wifi.ssid===wifiList_connected.ssid">
+                  <div class="list-item-button-wrap"
+                       v-if="wifiList_connected!==null&&wifi.ssid===wifiList_connected.ssid">
                     <el-icon class="el-icon-success icon"/>
                   </div>
 
@@ -75,8 +77,13 @@
 
                   </el-form>
                   <div class="todo-wifi-button-wrap">
-                    <el-button v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1&&active_wifi_obj.ssid!==wifiList_connected.ssid" size="mini" type="info" @click="cancelSelect">Cancel</el-button>
-                    <el-button v-if="showForm" size="mini" type="primary" :disabled="!isConnected"  @click="connectWifi">Connect</el-button>
+                    <el-button
+                        v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1&&active_wifi_obj.ssid!==wifiList_connected.ssid"
+                        size="mini" type="info" @click="cancelSelect">Cancel
+                    </el-button>
+                    <el-button v-if="showForm" size="mini" type="primary" :disabled="!isConnected" @click="connectWifi">
+                      Connect
+                    </el-button>
                     <el-button
                         v-if="showForget"
                         class="forget-button"
@@ -84,7 +91,8 @@
                         type="primary"
                         :disabled="!isConnected"
                         @click="forgetWifiClick"
-                    >Forget</el-button>
+                    >Forget
+                    </el-button>
                   </div>
                 </div>
 
@@ -109,13 +117,15 @@
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <el-form :label-width="isMobile?'100px':'220px'" label-position="left" ref="SaaSForm" :rules="SaaSFormRules" :model="SaaSForm">
+          <el-form :label-width="isMobile?'100px':'220px'" label-position="left" ref="SaaSForm" :rules="SaaSFormRules"
+                   :model="SaaSForm">
             <el-form-item label="IP Address：" prop="ipAddress">
               <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ipAddress"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Port：" prop="port">
-              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number" @input="value => SaaSForm.port = Number(value)"
+              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number"
+                        @input="value => SaaSForm.port = Number(value)"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
           </el-form>
@@ -134,10 +144,12 @@
             </div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <el-form ref="recordingForm" :label-width="isMobile?'180px':'220px'" label-position="left" :rules="recordingFormRules" :model="recordingForm">
+          <el-form ref="recordingForm" :label-width="isMobile?'180px':'220px'" label-position="left"
+                   :rules="recordingFormRules" :model="recordingForm">
 
             <el-form-item label="Maximum duration (seconds)：" prop="maxRecordDuration">
-              <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number" @input="value => recordingForm.maxRecordDuration = Number(value)"
+              <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number"
+                        @input="value => recordingForm.maxRecordDuration = Number(value)"
                         :disabled="!recordingFormIsEditor"></el-input>
             </el-form-item>
             <el-form-item label="Start when power on：" prop="autoOnDutyWhenPowerOn">
@@ -205,7 +217,8 @@
               </div>
             </div>
             <div class="warning-wrap-button-wrap">
-              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read it
+              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read
+                it
               </el-button>
             </div>
 
@@ -234,7 +247,7 @@ export default {
     let checkMaxRecordDuration = (rule, value, callback) => {
       if (value === null || value === undefined || value === '') {
         return callback(new Error('Please enter the maximum recording duration'));
-      } else if (value < 1 ) {
+      } else if (value < 1) {
         //大于0
         return callback(new Error('The maximum recording duration must be greater than 0'));
       } else {
@@ -245,7 +258,7 @@ export default {
     let checkSass = (rule, value, callback) => {
       if (value === null || value === undefined || value === '') {
         return callback(new Error('Please enter the SASS'));
-      } else if (value < 1 ) {
+      } else if (value < 1) {
         //大于0
         return callback(new Error('The SASS must be greater than 0'));
       } else {
@@ -267,8 +280,8 @@ export default {
         characteristicReadChannel: null,//读取通道对象
         connect: false//标记是否已连接
       },
-      isWritingCount:false ,//是否正在写入数据
-      isOperationInProgress:false ,//是否正在写入数据
+      isWritingCount: false,//是否正在写入数据
+      isOperationInProgress: false,//是否正在写入数据
       device: null,//蓝牙设备对象
       service: null,//蓝牙GATT服务器对象
       characteristic: null,//蓝牙特征对象
@@ -306,15 +319,20 @@ export default {
         ip: null,//IP地址
         port: null,//端口
       },
-      SaaSFormRules:{
+      SaaSFormRules: {
         // SaaS平台校验规则
         ipAddress: [
-          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
-          { type: 'string', pattern: /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/, message: 'Please enter the correct IP address', trigger: 'blur' }
+          {required: true, message: 'Please enter the IP address', trigger: 'blur'},
+          {
+            type: 'string',
+            pattern: /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/,
+            message: 'Please enter the correct IP address',
+            trigger: 'blur'
+          }
         ],
         port: [
-          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
-          { validator: checkSass, trigger: 'blur' }
+          {required: true, message: 'Please enter the IP address', trigger: 'blur'},
+          {validator: checkSass, trigger: 'blur'}
         ]
       },
       recordingFormIsEditor: false,//录音是否为编辑状态
@@ -323,10 +341,10 @@ export default {
         autoOnDutyWhenPowerOn: false,//开机自动上班
         autoOffDutyWhenPowerDown: false,//关机自动下班
       },
-      recordingFormRules:{//录音校验规则
+      recordingFormRules: {//录音校验规则
         maxRecordDuration: [
-          { required: true, message: 'Please enter the IP address', trigger: 'blur' },
-          { validator: checkMaxRecordDuration, trigger: 'blur' }
+          {required: true, message: 'Please enter the IP address', trigger: 'blur'},
+          {validator: checkMaxRecordDuration, trigger: 'blur'}
         ]
       },
       USBFormIsEditor: false,//U盘解锁是否为编辑状态
@@ -397,11 +415,11 @@ export default {
 
           if (valid) {
             // TODO: 校验录音数据
-            var flag=false;
-            if(flag===false){
-              flag=true;
+            var flag = false;
+            if (flag === false) {
+              flag = true;
               this.setSaaS(this.SaaSForm.ipAddress, this.SaaSForm.port).then(res => {
-                flag=false
+                flag = false
               })
             }
 
@@ -413,7 +431,6 @@ export default {
         });
 
 
-
       }
       if (type === 'recording') {
         this.$refs.recordingForm.validate((valid) => {
@@ -421,11 +438,11 @@ export default {
           if (valid) {
             // TODO: 校验录音数据
 
-            var flag=false;
-            if(flag===false){
-              flag=true;
+            var flag = false;
+            if (flag === false) {
+              flag = true;
               this.setRecord(this.recordingForm.maxRecordDuration, this.recordingForm.autoOnDutyWhenPowerOn, this.recordingForm.autoOffDutyWhenPowerDown).then(res => {
-                flag=false
+                flag = false
               })
             }
           } else {
@@ -439,11 +456,11 @@ export default {
       }
       if (type === 'usb') {
         // TODO: U盘解锁
-        var flag=false;
-        if(flag===false){
-          flag=true;
+        var flag = false;
+        if (flag === false) {
+          flag = true;
           this.setUStorage(this.USBForm.unlocked).then(res => {
-            flag=false
+            flag = false
           })
         }
 
@@ -615,31 +632,31 @@ export default {
       this.server = null; // 清空服务器信息
       this.service = null; // 清空服务信息
       this.characteristic = null; // 清空特征信息
-      this.active_wifi_type=-1
-      this.active_wifi_obj={
-        "ssid":""
+      this.active_wifi_type = -1
+      this.active_wifi_obj = {
+        "ssid": ""
       }
-      this.wifiList=[]
-      this.wifiList_connected=[]
-      this.wifiList_memorized=[]
-      this.wifiList_scanned=[]
-      this.deviceInfo={
+      this.wifiList = []
+      this.wifiList_connected = []
+      this.wifiList_memorized = []
+      this.wifiList_scanned = []
+      this.deviceInfo = {
         SN: "",
         fwVersion: "",
       }
-      this.SaaSFormIsEditor=false
-      this.SaaSForm={
+      this.SaaSFormIsEditor = false
+      this.SaaSForm = {
         ip: '',//IP地址
         port: '',//端口
       }
-      this.recordingFormIsEditor=false
-      this.recordingForm={
+      this.recordingFormIsEditor = false
+      this.recordingForm = {
         maxRecordDuration: null,//最大时长
         autoOnDutyWhenPowerOn: false,//开机自动上班
         autoOffDutyWhenPowerDown: false,//关机自动下班
       }
-      this.USBFormIsEditor=false
-      this.USBForm= {
+      this.USBFormIsEditor = false
+      this.USBForm = {
         unlocked: false,//U盘解锁
       }
 
@@ -671,7 +688,7 @@ export default {
         }
 
         this.isOperationInProgress = true;
-        this.isInit=true;
+        this.isInit = true;
 
         // 读设备信息
         await this.getDevice();
@@ -713,7 +730,7 @@ export default {
       });
       this.isOperationInProgress = true;
       return new Promise((resolve, reject) => {
-        this.isWritingCount=true
+        this.isWritingCount = true
         characteristic.writeValue(new TextEncoder().encode(JSON.stringify(data)))
             .then(() => {
               // console.log('Command send success', data);
@@ -723,8 +740,8 @@ export default {
               resolve();
             })
             .catch(error => {
-              console.error(data.method+'指令发送失败:', error);
-              this.$message.error(data.method+'指令发送失败:', error)
+              console.error(data.method + '指令发送失败:', error);
+              this.$message.error(data.method + '指令发送失败:', error)
               loading.close()
               reject(error);
             });
@@ -753,7 +770,7 @@ export default {
             // console.log(text);
             const response = JSON.parse(text); // 解析 JSON
             this.isOperationInProgress = false;
-            this.isWritingCount=false
+            this.isWritingCount = false
 
             // console.log('JSON.parse后:');
             // console.log(response);
@@ -765,7 +782,7 @@ export default {
                 console.error('reboot error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
+              if (response.result === 0) {
                 //刷新一下当前页面
                 // localStorage.removeItem('isConnected')
 
@@ -781,7 +798,7 @@ export default {
                 console.error('restoreFactory error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
+              if (response.result === 0) {
                 this.init()
 
               }
@@ -800,18 +817,18 @@ export default {
               this.wifiList_memorized = response.result.memorized !== null ? response.result.memorized : [];//已记忆的设备列表
               this.wifiList = []
               this.active_wifi_obj = {
-                "ssid":''
+                "ssid": ''
               }
               this.active_wifi_type = 1
               this.selectedWifiIndex = -1
               //把几个列表合并成一个列表
-              this.wifiList = [ ...this.wifiList_connected, ...this.wifiList_memorized,...this.wifiList_scanned]
+              this.wifiList = [...this.wifiList_connected, ...this.wifiList_memorized, ...this.wifiList_scanned]
               //根据ssid 去重
               this.wifiList = this.wifiList.filter((item, index, self) => {
                 return self.findIndex(i => i.ssid === item.ssid) === index;
               })
 
-              if (this.isInit){
+              if (this.isInit) {
                 this.getSaaS()
               }
 
@@ -822,19 +839,19 @@ export default {
 
               console.log('通知返回连接指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('connectWiFi error message:'+response.error.message )
+                this.$message.error('connectWiFi error message:' + response.error.message)
                 console.error('connectWiFi error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
-                this.selectedWifiIndex=-1
-                this.active_wifi_obj={
-                  "ssid":''
+              if (response.result === 0) {
+                this.selectedWifiIndex = -1
+                this.active_wifi_obj = {
+                  "ssid": ''
                 }
 
                 this.fetchMemorizedWifiList().then(() => {
                   this.$message.success('connectWiFi success')
-                }).catch(err=>{
+                }).catch(err => {
                   console.error(err)
                 })
 
@@ -850,31 +867,29 @@ export default {
                 console.error('forgetWiFi error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
-                this.selectedWifiIndex=-1
-                this.active_wifi_obj={
-                  "ssid":''
+              if (response.result === 0) {
+                this.selectedWifiIndex = -1
+                this.active_wifi_obj = {
+                  "ssid": ''
                 }
-                for (let i = 0; i <this.wifiList_memorized.length ; i++) {
-                  if (this.wifiList_memorized[i].ssid === this.active_wifi_obj.ssid){
-                    this.wifiList_memorized.splice(i,1)
+                for (let i = 0; i < this.wifiList_memorized.length; i++) {
+                  if (this.wifiList_memorized[i].ssid === this.active_wifi_obj.ssid) {
+                    this.wifiList_memorized.splice(i, 1)
                   }
                 }
-                for (let i = 0; i <this.wifiList_connected.length ; i++) {
-                  if (this.wifiList_connected[i].ssid === this.active_wifi_obj.ssid){
-                    this.wifiList_connected.splice(i,1)
+                for (let i = 0; i < this.wifiList_connected.length; i++) {
+                  if (this.wifiList_connected[i].ssid === this.active_wifi_obj.ssid) {
+                    this.wifiList_connected.splice(i, 1)
                   }
                 }
                 //延迟一秒再刷新列表
                 setTimeout(() => {
                   this.fetchMemorizedWifiList().then(() => {
                     this.$message.success('forgetWiFi success')
-                  }).catch(err=>{
+                  }).catch(err => {
                     console.error(err)
                   })
                 }, 1000);
-
-
 
 
               }
@@ -892,7 +907,7 @@ export default {
                 this.SaaSForm = response.result
                 this.SaaSFormIsEditor = false
 
-                if (this.isInit){
+                if (this.isInit) {
                   this.getRecord()
                 }
 
@@ -906,8 +921,8 @@ export default {
                 console.error('setSaaS error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
-                this.SaaSFormIsEditor=false
+              if (response.result === 0) {
+                this.SaaSFormIsEditor = false
                 this.getSaaS().then(res => {
                   this.$message.success('setSaaS success')
                 })
@@ -927,7 +942,7 @@ export default {
                 this.recordingForm = response.result
                 this.recordingFormIsEditor = false
 
-                if (this.isInit){
+                if (this.isInit) {
                   this.getUStorage()
                 }
 
@@ -941,8 +956,8 @@ export default {
                 console.error('setRecord error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
-                this.recordingFormIsEditor=false
+              if (response.result === 0) {
+                this.recordingFormIsEditor = false
                 this.getRecord().then(res => {
                   this.$message.success('setRecord success')
                 })
@@ -961,7 +976,7 @@ export default {
               if (response.result) {
                 this.USBForm = response.result
                 this.USBFormIsEditor = false
-                this.isInit=false
+                this.isInit = false
 
               }
             }
@@ -973,8 +988,8 @@ export default {
                 console.error('setUStorage error message:', response.error.message)
                 return
               }
-              if (response.result===0) {
-                this.USBFormIsEditor=false
+              if (response.result === 0) {
+                this.USBFormIsEditor = false
                 this.getUStorage().then(res => {
                   this.$message.success('setUStorage success')
                 })
@@ -990,7 +1005,7 @@ export default {
               }
               if (response.result) {
                 this.deviceInfo = response.result
-                if (this.isInit){
+                if (this.isInit) {
                   this.fetchMemorizedWifiList()
                 }
 
@@ -1011,17 +1026,17 @@ export default {
           }
         } else {
           console.error('text 不是有效的 JSON 格式');
-          this.isWritingCount=false
+          this.isWritingCount = false
         }
       } catch (error) {
         // console.error('解码失败:', error);
         console.error('数据不是有效的 UTF-8 编码');
-        this.isWritingCount=false
+        this.isWritingCount = false
         return;
       }
 
     },
-    async handleRestart(){
+    async handleRestart() {
       this.$confirm('Are you sure you want to restart?？', 'tips', {
         confirmButtonText: 'Sure',
         cancelButtonText: 'Cancel',
@@ -1030,15 +1045,15 @@ export default {
         // 确认重启设备
 
         location.reload()
-            // await this.rebootDevice()
-            // .then(() => {
-            //
-            // })
-            // .catch(error => {
-            //   // 重启设备失败，处理错误
-            //   console.error('重启设备失败:', error);
-            //   this.$message.error('Restarting the device failed:', error)
-            // });
+        // await this.rebootDevice()
+        // .then(() => {
+        //
+        // })
+        // .catch(error => {
+        //   // 重启设备失败，处理错误
+        //   console.error('重启设备失败:', error);
+        //   this.$message.error('Restarting the device failed:', error)
+        // });
       }).catch(() => {
         // 取消重启设备
         this.$message({
@@ -1328,7 +1343,6 @@ export default {
     },
 
 
-
     isJson(text) {
       if (typeof text !== 'string') {
         // console.error('text 不是string');
@@ -1422,7 +1436,6 @@ export default {
         this.wifi_pwd = ''
       }
       // console.log(this.active_wifi_obj, this.selectedWifiIndex)
-
 
 
     },
@@ -1562,26 +1575,27 @@ export default {
 
 
 
-  .header-button-wrap {
-    display: flex;
-    flex-direction: row;
-  }
+}
+.header-button-wrap {
+  display: flex;
+  flex-direction: row;
 }
 .logo-wrap {
-    display: flex;
-    height: 100%;
-    align-items: center;
-//不换行
-    white-space: nowrap;
+  display: flex;
+  height: 100%;
+  align-items: center;
+//不换行 white-space: nowrap;
 
 
 }
+
 .logo {
-    display: inline-block;
-    width: auto;
-    height: 80%;
-    margin-right: 10px;
+  display: inline-block;
+  width: auto;
+  height: 80%;
+  margin-right: 10px;
 }
+
 .main-wrap {
   width: 100%;
   padding-bottom: 60px;
@@ -1591,145 +1605,158 @@ export default {
   align-items: center;
   justify-content: center;
 
-  .index-header {
-    width: 100%;
-  }
 
-  .index-main {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 0;
-
-  }
-
-  .title {
-    font-size: 18px;
-    font-weight: bold;
-
-  }
-
-  .title-wrap {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-
-    .icon-wrap {
-      margin-left: 15px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      .iconfont {
-        cursor: pointer;
-      }
-    }
-  }
-
-
-  .icon {
-    color: #409EFF;
-    font-size: 20px;
-
-  }
-
-  .box-card {
-    width: 100%;
-    margin-top: 30px;
-
-    .card-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 15px;
-
-    }
-
-    .list-list {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-
-      .list-item {
-        width: 100%;
-        display: flex;
-        margin-bottom: 15px;
-        flex-direction: column;
-        min-height: 35px;
-        align-items: center;
-        justify-content: center;
-
-        .list-item-body {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-
-          .list-item-body-item {
-            display: flex;
-            width: 100%;
-
-            border-bottom: 1px solid #ddd;
-            padding: 10px 15px;
-            flex-direction: row;
-
-            .item-label {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-              width: 80%;
-              flex: 1;
-
-              .wifi-icon {
-                margin-right: 10px;
-              }
-
-              .wifi-name {
-                font-size: 14px;
-              }
-            }
-
-            &.noBorder {
-              border: none;
-            }
-
-          }
-
-          .wifi-password {
-            font-size: 14px;
-            margin-top: 15px;
-          }
-
-          .list-item-body-item:hover {
-            background: rgba(64, 158, 255, 0.1);
-            cursor: pointer;
-          }
-
-          .list-item-body-item.active {
-            background: rgba(64, 158, 255, 0.5);
-            cursor: pointer;
-          }
-        }
-
-        .list-item-button-wrap {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: right;
-
-          .input-item {
-            margin-right: 10px;
-          }
-
-
-        }
-      }
-    }
-
-  }
 }
 
+.index-header {
+  width: 100%;
+}
+
+.index-main {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0;
+
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+
+}
+
+.title-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+
+}
+
+.icon-wrap {
+  margin-left: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+
+}
+
+.iconfont {
+  cursor: pointer;
+}
+
+.icon {
+  color: #409EFF;
+  font-size: 20px;
+
+}
+
+.box-card {
+  width: 100%;
+  margin-top: 30px;
+
+
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+
+}
+
+.list-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.list-list .list-item {
+  width: 100%;
+  display: flex;
+  margin-bottom: 15px;
+  flex-direction: column;
+  min-height: 35px;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.list-list .list-item .list-item-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+
+}
+
+.list-item-body-item {
+  display: flex;
+  width: 100%;
+
+  border-bottom: 1px solid #ddd;
+  padding: 10px 15px;
+  flex-direction: row;
+
+
+}
+
+.item-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  flex: 1;
+
+
+}
+
+.wifi-icon {
+  margin-right: 10px;
+}
+
+.wifi-name {
+  font-size: 14px;
+}
+
+.noBorder {
+  border: none;
+}
+
+.wifi-password {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.list-item-body-item:hover {
+  background: rgba(64, 158, 255, 0.1);
+  cursor: pointer;
+}
+
+.list-item-body-item.active {
+  background: rgba(64, 158, 255, 0.5);
+  cursor: pointer;
+}
+
+.list-list .list-item .list-item-button-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: right;
+
+
+}
+
+.input-item {
+  margin-right: 10px;
+}
 
 .iconfont {
   font-size: 26px;
@@ -1738,42 +1765,50 @@ export default {
 }
 
 .warning-wrap {
-  .warning-wrap-box{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid #ddd;
-    padding: 20px 10px;
-    .warning-wrap-title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
 
-    .warning-wrap-body {
-      p {
-        font-size: 14px;
-        line-height: 1.5;
-        margin-bottom: 10px;
-      }
-    }
-
-
-  }
 
 }
+
+.warning-wrap-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 20px 10px;
+
+
+}
+
+.warning-wrap-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.warning-wrap-body {
+
+}
+
+.warning-wrap-body p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
 .warning-wrap-button-wrap {
-    padding-top: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
+
 .todo-wifi-button-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
 }
+
 h1.logo_title {
   font-size: 16px;
   display: flex;
@@ -1781,11 +1816,13 @@ h1.logo_title {
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 768px) {
   h1.logo_title {
     font-size: 10px;
     white-space: nowrap;
   }
+
   /* 移动端样式 */
   .el-form-item__label {
     font-size: 12px;
@@ -1795,106 +1832,110 @@ h1.logo_title {
     width: 100%;
     max-width: 100%;
 
-    .logo-wrap {
-      height: 100%;
 
-      .logo {
-        width: 60px;
-        height: auto;
+  }
 
-      }
+  .logo-wrap {
+    height: 100%;
 
 
-    }
+  }
+
+  .logo {
+    width: 60px;
+    height: auto;
+
   }
 
   .main-wrap {
     width: 100%;
     padding-bottom: 30px;
 
-    .index-header {
-      width: 100%;
-    }
 
-    .index-main {
-      width: 100%;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 0 15px;
-
-    }
-
-    .title-wrap {
-      width: 100%;
-
-
-      .title {
-        font-size: 14px;
-
-
-      }
-
-      .icon-wrap {
-        margin-left: 15px;
-      }
-    }
-
-
-    .icon {
-
-
-    }
-
-    .box-card {
-      width: 100%;
-
-      .card-title {
-        font-size: 16px;
-        margin-bottom: 5px;
-
-      }
-
-      .list-list {
-        width: 100%;
-        display: flex;
-
-        .list-item {
-          width: 100%;
-          margin-bottom: 15px;
-          min-height: 35px;
-
-          .list-item-body {
-
-            width: 100%;
-
-            .list-item-body-item {
-
-              .item-label {
-                width: 80%;
-              }
-
-            }
-
-            .list-item-body-item:hover {
-
-            }
-          }
-
-          .list-item-button-wrap {
-
-            .input-item {
-              margin-right: 10px;
-            }
-
-
-          }
-        }
-      }
-
-    }
+  }
+  .index-header {
+    width: 100%;
   }
 
+  .index-main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
 
+  }
+
+  .title-wrap {
+    width: 100%;
+
+
+
+  }
+  .title {
+    font-size: 14px;
+
+
+  }
+
+  .icon-wrap {
+    margin-left: 15px;
+  }
+  .icon {
+
+
+  }
+
+  .box-card {
+    width: 100%;
+
+
+
+  }
+  .card-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+
+  }
+
+  .list-list {
+    width: 100%;
+    display: flex;
+
+
+  }
+  .list-item {
+    width: 100%;
+    margin-bottom: 15px;
+    min-height: 35px;
+
+
+  }
+  .list-item-body {
+
+    width: 100%;
+
+
+  }
+  .list-item-body-item {
+
+
+
+  }
+  .item-label {
+    width: 80%;
+  }
+  .list-item-body-item:hover {
+
+  }
+  .list-item-button-wrap {
+
+
+
+
+  }
+  .input-item {
+    margin-right: 10px;
+  }
   .iconfont {
     font-size: 26px;
     color: #409EFF;
@@ -1902,25 +1943,26 @@ h1.logo_title {
   }
 
   .warning-wrap {
-    .warning-wrap-title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
 
-    .warning-wrap-body {
-      p {
-        font-size: 14px;
-        line-height: 1.5;
-        margin-bottom: 10px;
-      }
-    }
+  }
+  .warning-wrap-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+  }
 
-    .warning-wrap-button-wrap {
-      padding-top: 20px;
-        text-align: center;
+  .warning-wrap-body {
 
-    }
+  }
+  .warning-wrap-body p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .warning-wrap-button-wrap {
+    padding-top: 20px;
+    text-align: center;
+
   }
 }
 </style>
