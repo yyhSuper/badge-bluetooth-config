@@ -1564,6 +1564,8 @@ export default {
     display: flex;
     height: 100%;
     align-items: center;
+      //不换行
+      white-space: nowrap;
 
     .logo {
       display: inline-block;
