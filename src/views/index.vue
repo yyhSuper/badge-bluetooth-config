@@ -16,8 +16,9 @@
         </div>
 
         <div class="header-button-wrap">
-          <el-button size="mini" type="primary" @click="connectToDevice" :disabled="isConnected">Connect</el-button>
-          <el-button size="mini" type="danger" @click="handleRestart" :disabled="!isConnected">Restart</el-button>
+          <el-button size="mini" type="primary" @click="connectToDevice" :disabled="isConnected">接続</el-button><!--连接-->
+          <el-button size="mini" type="danger" @click="handleRestart" :disabled="!isConnected">保存</el-button>	<!--重启-->
+
         </div>
 
       </div>
@@ -25,20 +26,22 @@
         <!--        Device Information-->
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <div class="title-wrap"><span class="title">Device Information</span></div>
+            <div class="title-wrap"><span class="title">デバイス情報</span></div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
-          <div class="list-list">
+
+
+            <div class="list-list">
             <div class="list-item">
               <div class="list-item-body">
                 <div class="list-item-body-item noBorder">
-                  <div class="item-label">Device SN：</div>
+                  <div class="item-label"><!--设备SN-->シリアル番号：</div>
                   <div class="list-item-button-wrap">
                     <span>{{ deviceInfo.SN }}</span>
                   </div>
                 </div>
                 <div class="list-item-body-item noBorder">
-                  <div class="item-label">Firmware Version：</div>
+                  <div class="item-label"><!--固件版本号-->システムバージョン：</div>
                   <div class="list-item-button-wrap">
                     <span>{{ deviceInfo.fwVersion }}</span>
                   </div>
@@ -51,7 +54,7 @@
         <!--        WIFI Network-->
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <div class="title-wrap"><span class="title">WiFi Network</span></div>
+            <div class="title-wrap"><span class="title"><!--WIFI网络-->Wi-Fi接続</span></div>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <div class="list-list">
@@ -66,11 +69,22 @@
                     <el-icon class="el-icon-success icon"/>
                   </div>
 
+<!--
+                    SaaS平台	中継機器接続
+                    IP地址	IPアドレス
+                    端口	ポート
+                    录音	録音設定
+                    最大时长(秒)	最大録音時間（秒）
+                    开机自动上班	電源ON後 自動録音開始
+                    关机自动下班	電源OFF後 自動録音終了
+                    U盘解锁	USBロック
+                    恢复出厂设置	初期化-->
                 </div>
                 <div class="wifi-password">
                   <el-form :label-width="isMobile?'100px':'220px'" label-position="left" v-if="showForm">
                     <el-form-item label="Password：">
-                      <el-input v-model="wifi_pwd" placeholder="Please enter WiFi password" size="mini"
+<!--                        请输入WiFi密码-->
+                      <el-input v-model="wifi_pwd" placeholder="Wi-Fi パスワードを入力してください" size="mini"
                                 class="input-item"
                                 :disabled="!isConnected"></el-input>
                     </el-form-item>
@@ -79,10 +93,10 @@
                   <div class="todo-wifi-button-wrap">
                     <el-button
                         v-if="active_wifi_obj.ssid!==''&&selectedWifiIndex!==-1&&active_wifi_obj.ssid!==wifiList_connected.ssid"
-                        size="mini" type="info" @click="cancelSelect">Cancel
+                        size="mini" type="info" @click="cancelSelect">キャンセル
                     </el-button>
                     <el-button v-if="showForm" size="mini" type="primary" :disabled="!isConnected" @click="connectWifi">
-                      Connect
+                      接続
                     </el-button>
                     <el-button
                         v-if="showForget"
@@ -107,7 +121,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">SaaS Platform</span>
+              <span class="title"><!--SaaS PlatformSaaS平台-->中継機器接続</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="SaaSFormIsEditor&&isConnected"
                       @click="saveForm('sass')"></span>
@@ -119,12 +133,16 @@
           </div>
           <el-form :label-width="isMobile?'100px':'220px'" label-position="left" ref="SaaSForm" :rules="SaaSFormRules"
                    :model="SaaSForm">
-            <el-form-item label="IP Address：" prop="ipAddress">
-              <el-input placeholder="Please enter the IP address" v-model="SaaSForm.ipAddress"
+<!--              IP地址-->
+            <el-form-item label="IPアドレス：" prop="ipAddress">
+<!--                请输入ip地址-->
+              <el-input placeholder="IPアドレス を入力してください" v-model="SaaSForm.ipAddress"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
-            <el-form-item label="Port：" prop="port">
-              <el-input placeholder="Please enter the port number" v-model="SaaSForm.port" type="number"
+<!--              请输入端口号	ポート を入力してください-->
+
+              <el-form-item label="ポート：" prop="port">
+              <el-input placeholder="ポート を入力してください" v-model="SaaSForm.port" type="number"
                         @input="value => SaaSForm.port = Number(value)"
                         :disabled="!SaaSFormIsEditor"></el-input>
             </el-form-item>
@@ -134,7 +152,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">Record</span>
+              <span class="title"><!--Record录音-->録音設定</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="recordingFormIsEditor&&isConnected"
                       @click="saveForm('recording')"></span>
@@ -146,13 +164,13 @@
           </div>
           <el-form ref="recordingForm" :label-width="isMobile?'180px':'220px'" label-position="left"
                    :rules="recordingFormRules" :model="recordingForm">
-
-            <el-form-item label="Maximum duration (seconds)：" prop="maxRecordDuration">
+<!--            最大时长(秒)-->
+            <el-form-item label="最大録音時間（秒）：" prop="maxRecordDuration">
               <el-input v-model="recordingForm.maxRecordDuration" placeholder="" type="number"
                         @input="value => recordingForm.maxRecordDuration = Number(value)"
                         :disabled="!recordingFormIsEditor"></el-input>
             </el-form-item>
-            <el-form-item label="Start when power on：" prop="autoOnDutyWhenPowerOn">
+            <el-form-item label="電源ON後 自動録音開始：" prop="autoOnDutyWhenPowerOn">
               <el-switch
                   v-model="recordingForm.autoOnDutyWhenPowerOn"
                   :disabled="!recordingFormIsEditor"
@@ -160,7 +178,7 @@
                   inactive-color="#eee">
               </el-switch>
             </el-form-item>
-            <el-form-item label="Stop when power off：" prop="autoOffDutyWhenPowerDown">
+            <el-form-item label="電源OFF後 自動録音終了：" prop="autoOffDutyWhenPowerDown">
               <el-switch
                   v-model="recordingForm.autoOffDutyWhenPowerDown"
                   :disabled="!recordingFormIsEditor"
@@ -174,7 +192,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">USB</span>
+              <span class="title">USBロック</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="USBFormIsEditor&&isConnected"
                       @click="saveForm('usb')"></span>
@@ -185,7 +203,7 @@
             <!--            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
           </div>
           <el-form :label-width="isMobile?'180px':'220px'" label-position="left">
-            <el-form-item label="Unlock：">
+            <el-form-item label="USBロック：">
               <el-switch
                   v-model="USBForm.unlocked"
                   :disabled="!USBFormIsEditor"
@@ -199,7 +217,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title">Restore factory settings</span>
+              <span class="title">初期化</span>
               <!--              <div class="icon-wrap">
                               <span class="iconfont icon-baocun"></span>
                               <span class="iconfont icon-bianji"></span>
@@ -209,16 +227,15 @@
           </div>
           <div class="warning-wrap">
             <div class="warning-wrap-box">
-              <div class="warning-wrap-title">Warning clause</div>
+              <div class="warning-wrap-title">初期化注意事項</div>
               <div class="warning-wrap-body">
-                <p>1. Your modified settings will be restored to default settings</p>
-                <p>2. Your machine needs to be reset before it can work properly</p>
-                <p>3. Your firmware version remains unchanged and cannot be restored to the default firmware</p>
+                <p>1.デバイスの設定が初期状態に戻ります</p>
+                <p>2.デバイスを使用するには、再設定が必要になります</p>
+                <p>3.デバイスのシステムバージョンは変わりません</p>
               </div>
             </div>
             <div class="warning-wrap-button-wrap">
-              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">I have read
-                it
+              <el-button size="mini" type="danger" :disabled="!isConnected" @click="restoreFactorySettings">初期化注意事項を確認しました
               </el-button>
             </div>
 
@@ -246,10 +263,10 @@ export default {
     //检验录音表单验证规则
     let checkMaxRecordDuration = (rule, value, callback) => {
       if (value === null || value === undefined || value === '') {
-        return callback(new Error('Please enter the maximum recording duration'));
+        return callback(new Error('0より大きい数値を入力してください'));
       } else if (value < 1) {
         //大于0
-        return callback(new Error('The maximum recording duration must be greater than 0'));
+        return callback(new Error('0より大きい数値を入力してください'));
       } else {
         callback();
       }
@@ -260,7 +277,7 @@ export default {
         return callback(new Error('Please enter the SASS'));
       } else if (value < 1) {
         //大于0
-        return callback(new Error('The SASS must be greater than 0'));
+        return callback(new Error('正しいポート番号を入力してください'));
       } else {
         callback();
       }
@@ -322,16 +339,16 @@ export default {
       SaaSFormRules: {
         // SaaS平台校验规则
         ipAddress: [
-          {required: true, message: 'Please enter the IP address', trigger: 'blur'},
+          {required: true, message: 'IPアドレス を入力してください', trigger: 'blur'},
           {
             type: 'string',
             pattern: /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/,
-            message: 'Please enter the correct IP address',
+            message: '正しいIPアドレスを入力してください',
             trigger: 'blur'
           }
         ],
         port: [
-          {required: true, message: 'Please enter the IP address', trigger: 'blur'},
+          {required: true, message: 'ポート を入力してください ', trigger: 'blur'},
           {validator: checkSass, trigger: 'blur'}
         ]
       },
@@ -481,9 +498,9 @@ export default {
 
     },
     restoreFactorySettings() {
-      this.$confirm('Are you sure you want to restore the factory settings?', 'Restore Factory Settings', {
-        confirmButtonText: 'Restore',
-        cancelButtonText: 'Cancel',
+      this.$confirm('初期化を実行しますか?', '初期化を実行します', {
+        confirmButtonText: '初期化を実行します',
+        cancelButtonText: 'キャンセル',
         type: 'warning'
       }).then(() => {
         // 用户点击确定按钮，执行恢复出厂设置操作
@@ -495,7 +512,7 @@ export default {
         })
       }).catch(() => {
         // 用户点击取消按钮，取消恢复出厂设置操作
-        this.$message.info('Restore factory settings canceled');
+        // this.$message.info('Restore factory settings canceled');
       });
 
     },
@@ -740,8 +757,8 @@ export default {
               resolve();
             })
             .catch(error => {
-              console.error(data.method + '指令发送失败:', error);
-              this.$message.error(data.method + '指令发送失败:', error)
+              console.error(data.method + 'リクエストエラー:', error);
+              this.$message.error(data.method + 'リクエストエラー:', error)
               loading.close()
               reject(error);
             });
@@ -778,7 +795,7 @@ export default {
             if (response.id === 100) {
               // console.log('通知返回重启设备response', response)
               if (response.error) {
-                this.$message.error('reboot error message:', response.error.message)
+                this.$message.error('保存エラー:', response.error.message)
                 console.error('reboot error message:', response.error.message)
                 return
               }
@@ -794,7 +811,7 @@ export default {
             if (response.id === 101) {
               console.log('通知返回恢复出厂设置response', response)
               if (response.error) {
-                this.$message.error('restoreFactory error message:', response.error.message)
+                this.$message.error('初期化エラー:', response.error.message)
                 console.error('restoreFactory error message:', response.error.message)
                 return
               }
@@ -808,7 +825,7 @@ export default {
 
               console.log('通知返回读取WiFi热点列表response', response)
               if (response.error) {
-                this.$message.error('getWiFiList error message:', response.error.message)
+                this.$message.error('Wi-Fi ネットワークが見つかりません:', response.error.message)
                 console.error('getWiFiList error message:', response.error.message)
                 return
               }
@@ -839,7 +856,7 @@ export default {
 
               console.log('通知返回连接指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('connectWiFi error message:' + response.error.message)
+                this.$message.error('Wi-Fi ネットワーク接続エラー:' + response.error.message)
                 console.error('connectWiFi error message:', response.error.message)
                 return
               }
@@ -850,7 +867,7 @@ export default {
                 }
 
                 this.fetchMemorizedWifiList().then(() => {
-                  this.$message.success('connectWiFi success')
+                  this.$message.success('WiFi接続成功')
                 }).catch(err => {
                   console.error(err)
                 })
@@ -863,7 +880,7 @@ export default {
 
               console.log('通知返回忘记指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('forgetWiFi error message:', response.error.message)
+                this.$message.error('Wi-Fi ネットワーク切断エラー:', response.error.message)
                 console.error('forgetWiFi error message:', response.error.message)
                 return
               }
@@ -885,7 +902,7 @@ export default {
                 //延迟一秒再刷新列表
                 setTimeout(() => {
                   this.fetchMemorizedWifiList().then(() => {
-                    this.$message.success('forgetWiFi success')
+                    this.$message.success('WiFi の成功を忘れる')
                   }).catch(err => {
                     console.error(err)
                   })
@@ -899,7 +916,7 @@ export default {
 
               console.log('通知返回读SasS平台配置response', response)
               if (response.error) {
-                this.$message.error('getSaaS error message:', response.error.message)
+                this.$message.error('中継機器設定 読み取りエラー:', response.error.message)
                 console.error('getSaaS error message:', response.error.message)
                 return
               }
@@ -917,14 +934,14 @@ export default {
             if (response.id === 205) {
               console.log('通知返回写入SasS平台修改配置response', response)
               if (response.error) {
-                this.$message.error('setSaaS error message:', response.error.message)
+                this.$message.error('中継機器設定保存エラー:', response.error.message)
                 console.error('setSaaS error message:', response.error.message)
                 return
               }
               if (response.result === 0) {
                 this.SaaSFormIsEditor = false
                 this.getSaaS().then(res => {
-                  this.$message.success('setSaaS success')
+                  this.$message.success('中継機器の成功を設定する')
                 })
 
 
@@ -934,7 +951,7 @@ export default {
             if (response.id === 206) {
               console.log('通知返回读录音配置response', response)
               if (response.error) {
-                this.$message.error('getRecord error message:', response.error.message)
+                this.$message.error('録音設定 読み取りエラー:', response.error.message)
                 console.error('getRecord error message:', response.error.message)
                 return
               }
@@ -952,14 +969,14 @@ export default {
             if (response.id === 207) {
               console.log('通知返回写入录音配置response', response)
               if (response.error) {
-                this.$message.error('setRecord error message:', response.error.message)
+                this.$message.error('録音設定保存エラー:', response.error.message)
                 console.error('setRecord error message:', response.error.message)
                 return
               }
               if (response.result === 0) {
                 this.recordingFormIsEditor = false
                 this.getRecord().then(res => {
-                  this.$message.success('setRecord success')
+                  this.$message.success('録音設定を樹立する成功')
                 })
 
 
@@ -969,7 +986,7 @@ export default {
             if (response.id === 208) {
               console.log('通知返回读U盘配置response', response)
               if (response.error) {
-                this.$message.error('getUStorage error message:', response.error.message)
+                this.$message.error('USBロック設定 読み取りエラー:', response.error.message)
                 console.error('getUStorage error message:', response.error.message)
                 return
               }
@@ -985,13 +1002,13 @@ export default {
               console.log('通知返回写入U盘修改配置response', response)
               if (response.error) {
                 this.$message.error('setUStorage error message:', response.error.message)
-                console.error('setUStorage error message:', response.error.message)
+                console.error('USBロック設定 保存エラー:', response.error.message)
                 return
               }
               if (response.result === 0) {
                 this.USBFormIsEditor = false
                 this.getUStorage().then(res => {
-                  this.$message.success('setUStorage success')
+                  this.$message.success('ColorTU ストレージの成功')
                 })
               }
             }
@@ -999,7 +1016,7 @@ export default {
             if (response.id === 210) {
               console.log('通知返回读设备信息response', response)
               if (response.error) {
-                this.$message.error('getDevice error message:', response.error.message)
+                this.$message.error('デバイス情報 読み取りエラー', response.error.message)
                 console.error('getDevice error message:', response.error.message)
                 return
               }
@@ -1037,9 +1054,9 @@ export default {
 
     },
     async handleRestart() {
-      this.$confirm('Are you sure you want to restart?？', 'tips', {
-        confirmButtonText: 'Sure',
-        cancelButtonText: 'Cancel',
+      this.$confirm('設定を保存しますか？', 'tips', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'キャンセル',
         type: 'warning'
       }).then(async () => {
         // 确认重启设备
@@ -1056,10 +1073,10 @@ export default {
         // });
       }).catch(() => {
         // 取消重启设备
-        this.$message({
+       /* this.$message({
           type: 'info',
           message: 'Cancelled'
-        });
+        });*/
       });
     },
 
@@ -1387,7 +1404,7 @@ export default {
       // 检查操作系统和版本信息
       if (!isBluetoothSupported) {
         console.log("当前浏览器不支持 Web Bluetooth API");
-        this.$message.error("The current browser does not support the Web Bluetooth API")
+        this.$message.error("お使いのブラウザ は Web Bluetooth API に対応しておりません")
         return false;
       }
 
@@ -1414,12 +1431,12 @@ export default {
           return true;
         } else {
           console.log(`Edge 浏览器版本 ${edgeVersion} 不支持 Web Bluetooth API，最低要求版本为 ${minEdgeVersion}`);
-          this.$message.error("Edge browser version ${edgeVersion} does not support Web Bluetooth API, the minimum required version is ${minEdgeVersion}")
+          this.$message.error("Edgeブラウザ は Web Bluetooth API に対応しておりません ${minEdgeVersion}")
           return false;
         }
       } else if (isIOS) {
         console.log("iOS Chrome 不支持 Web Bluetooth API");
-        this.$message.error("iOS Chrome does not support Web Bluetooth API")
+        this.$message.error("iOS Chrome は Web Bluetooth API に対応しておりません")
 
         return false;
       } else {
