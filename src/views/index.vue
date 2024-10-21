@@ -1054,7 +1054,7 @@ export default {
 
     },
     async handleRestart() {
-      this.$confirm('設定を保存しますか？', 'tips', {
+      this.$confirm('設定を保存しますか？', '要注意', {
         confirmButtonText: 'OK',
         cancelButtonText: 'キャンセル',
         type: 'warning'
