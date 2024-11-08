@@ -35,7 +35,7 @@
             <div class="list-item">
               <div class="list-item-body">
                 <div class="list-item-body-item noBorder">
-                  <div class="item-label"><!--设备SN-->シリアル番号：</div>
+                  <div class="item-label"><!--设备SN-->デバイスSN：</div>
                   <div class="list-item-button-wrap">
                     <span>{{ deviceInfo.SN }}</span>
                   </div>
