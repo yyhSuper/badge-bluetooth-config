@@ -121,7 +121,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <div class="title-wrap">
-              <span class="title"><!--SaaS PlatformSaaS平台-->中継機器接続</span>
+              <span class="title"><!--SaaS PlatformSaaS平台-->サーバー設定</span>
               <div class="icon-wrap">
                 <span class="iconfont icon-baocun" v-show="SaaSFormIsEditor&&isConnected"
                       @click="saveForm('sass')"></span>
@@ -619,7 +619,7 @@ export default {
       } catch (error) {
         console.error('Error requesting Bluetooth device:', error);
         // console.error('连接设备失败:', error);
-        this.$message.error('You have unpaired your Bluetooth device')
+        this.$message.error('デバイスに接続できません')
         this.isConnected = false; // 确保连接失败时标记为未连接状态
         // localStorage.removeItem('isConnected');
       }
@@ -825,7 +825,7 @@ export default {
 
               console.log('通知返回读取WiFi热点列表response', response)
               if (response.error) {
-                this.$message.error('Wi-Fi ネットワークが見つかりません:', response.error.message)
+                this.$message.error('Wi-Fiが見つかりません:', response.error.message)
                 console.error('getWiFiList error message:', response.error.message)
                 return
               }
@@ -856,7 +856,7 @@ export default {
 
               console.log('通知返回连接指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('Wi-Fi ネットワーク接続エラー:' + response.error.message)
+                this.$message.error('Wi-Fi 接続エラー:' + response.error.message)
                 console.error('connectWiFi error message:', response.error.message)
                 return
               }
@@ -867,7 +867,7 @@ export default {
                 }
 
                 this.fetchMemorizedWifiList().then(() => {
-                  this.$message.success('WiFi接続成功')
+                  this.$message.success('Wi-Fiに接続しました')
                 }).catch(err => {
                   console.error(err)
                 })
@@ -880,7 +880,7 @@ export default {
 
               console.log('通知返回忘记指定WiFi热点response', response)
               if (response.error) {
-                this.$message.error('Wi-Fi ネットワーク切断エラー:', response.error.message)
+                this.$message.error('Wi-Fi 切断エラー:', response.error.message)
                 console.error('forgetWiFi error message:', response.error.message)
                 return
               }
@@ -902,7 +902,7 @@ export default {
                 //延迟一秒再刷新列表
                 setTimeout(() => {
                   this.fetchMemorizedWifiList().then(() => {
-                    this.$message.success('WiFi の成功を忘れる')
+                    this.$message.success('Wi-Fi設定を削除')
                   }).catch(err => {
                     console.error(err)
                   })
@@ -916,7 +916,7 @@ export default {
 
               console.log('通知返回读SasS平台配置response', response)
               if (response.error) {
-                this.$message.error('中継機器設定 読み取りエラー:', response.error.message)
+                this.$message.error('サーバー設定 読み取りエラー:', response.error.message)
                 console.error('getSaaS error message:', response.error.message)
                 return
               }
@@ -934,14 +934,14 @@ export default {
             if (response.id === 205) {
               console.log('通知返回写入SasS平台修改配置response', response)
               if (response.error) {
-                this.$message.error('中継機器設定保存エラー:', response.error.message)
+                this.$message.error('サーバー設定 保存エラー', response.error.message)
                 console.error('setSaaS error message:', response.error.message)
                 return
               }
               if (response.result === 0) {
                 this.SaaSFormIsEditor = false
                 this.getSaaS().then(res => {
-                  this.$message.success('中継機器の成功を設定する')
+                  this.$message.success('サーバー設定が保存されました')
                 })
 
 
@@ -969,14 +969,14 @@ export default {
             if (response.id === 207) {
               console.log('通知返回写入录音配置response', response)
               if (response.error) {
-                this.$message.error('録音設定保存エラー:', response.error.message)
+                this.$message.error('録音設定 保存エラー:', response.error.message)
                 console.error('setRecord error message:', response.error.message)
                 return
               }
               if (response.result === 0) {
                 this.recordingFormIsEditor = false
                 this.getRecord().then(res => {
-                  this.$message.success('録音設定を樹立する成功')
+                  this.$message.success('録音設定が保存されました')
                 })
 
 
@@ -1008,7 +1008,7 @@ export default {
               if (response.result === 0) {
                 this.USBFormIsEditor = false
                 this.getUStorage().then(res => {
-                  this.$message.success('ColorTU ストレージの成功')
+                  this.$message.success('USBロック設定が保存されました')
                 })
               }
             }
